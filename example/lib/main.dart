@@ -1,7 +1,7 @@
 import 'package:flutter_google_places_autocomplete/flutter_google_places_autocomplete.dart';
 import 'package:flutter/material.dart';
 
-const API_KEY = "AIzaSyBuZMpj_Yulhz4ux3BOndvxA4D8-PCEVrI";
+const API_KEY = "API_KEY";
 
 main() {
   runApp(new MaterialApp(
