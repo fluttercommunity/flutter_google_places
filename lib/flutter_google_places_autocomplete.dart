@@ -1,5 +1,4 @@
 library flutter_google_places_autocomplete;
 
-import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-
+export 'src/flutter_google_places_autocomplete.dart';
+export 'package:google_maps_webservice/places.dart';
