@@ -1,17 +1,15 @@
 name: flutter_google_places_autocomplete
 description: A new flutter package project.
 version: 0.0.1
-author:
-homepage:
+author: https://github.com/lejard-h/flutter_google_places_autocomplete
+homepage: Hadrien Lejard <hadrien.lejard@gmail.com>
 
 flutter:
 
 dependencies:
   flutter:
     sdk: flutter
-  google_maps_webservice:
-    git: git@github.com:lejard-h/google_maps_webservice.git
-  flutter_search_bar: any
+  google_maps_webservice: "^0.0.1"
 
 dev_dependencies:
   test: ^0.12.0

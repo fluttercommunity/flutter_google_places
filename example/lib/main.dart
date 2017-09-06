@@ -6,15 +6,8 @@ const API_KEY = "API_KEY";
 main() {
   runApp(new MaterialApp(
       title: "My App",
-      routes: {
-        "/search": (_) => new GooglePlacesAutocompleteScaffoldRoute(
-              apiKey: API_KEY,
-              language: "fr",
-              components: [new Component(Component.country, "fr")],
-              types: ["geocode"],
-            )
-      },
-      home: new MyApp()));
+      home: new MyApp(),
+      theme: new ThemeData(accentColor: Colors.redAccent)));
 }
 
 class MyApp extends StatefulWidget {
@@ -25,6 +18,8 @@ class MyApp extends StatefulWidget {
 final scaffoldKey = new GlobalKey();
 
 class _MyAppState extends State<MyApp> {
+  Mode _mode = Mode.overlay;
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -36,9 +31,30 @@ class _MyAppState extends State<MyApp> {
           child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          new DropdownButton(
+              value: _mode,
+              items: <DropdownMenuItem<Mode>>[
+                new DropdownMenuItem<Mode>(
+                    child: new Text("Overlay"), value: Mode.overlay),
+                new DropdownMenuItem<Mode>(
+                    child: new Text("Fullscreen"), value: Mode.fullscreen),
+              ],
+              onChanged: (m) {
+                setState(() {
+                  _mode = m;
+                });
+              }),
           new RaisedButton(
               onPressed: () async {
-                Prediction p = await Navigator.of(context).pushNamed("/search");
+                // show input autocomplete with selected mode
+                // then get the Prediction selected
+                Prediction p = await showGooglePlacesAutocomplete(
+                    context: context,
+                    apiKey: API_KEY,
+                    mode: _mode,
+                    language: "fr",
+                    components: [new Component(Component.country, "fr")]);
+
                 if (p != null) {
                   (scaffoldKey.currentState as ScaffoldState).showSnackBar(
                       new SnackBar(content: new Text(p.description)));
