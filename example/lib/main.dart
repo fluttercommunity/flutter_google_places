@@ -1,7 +1,7 @@
 import 'package:flutter_google_places_autocomplete/flutter_google_places_autocomplete.dart';
 import 'package:flutter/material.dart';
 
-const API_KEY = "API_KEY";
+const kGoogleApiKey = "API_KEY";
 
 main() {
   runApp(new MaterialApp(
@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
                 // then get the Prediction selected
                 Prediction p = await showGooglePlacesAutocomplete(
                     context: context,
-                    apiKey: API_KEY,
+                    apiKey: kGoogleApiKey,
                     mode: _mode,
                     language: "fr",
                     components: [new Component(Component.country, "fr")]);

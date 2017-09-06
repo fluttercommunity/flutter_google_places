@@ -17,11 +17,11 @@ dependencies:
 
 ```dart
 
-const GOOGLE_API_KEY = "API_KEY";
+const kGoogleApiKey = "API_KEY";
 
 Prediction p = await showGooglePlacesAutocomplete(
                           context: context,
-                          apiKey: API_KEY,
+                          apiKey: kGoogleApiKey,
                           mode: Mode.overlay, // Mode.fullscreen
                           language: "fr",
                           components: [new Component(Component.country, "fr")]);
