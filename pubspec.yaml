@@ -1,8 +1,11 @@
 name: flutter_google_places_autocomplete
 description: Google places autocomplete widgets for flutter.
 version: 0.0.1
-author: https://github.com/lejard-h/flutter_google_places_autocomplete
-homepage: Hadrien Lejard <hadrien.lejard@gmail.com>
+author: Hadrien Lejard <hadrien.lejard@gmail.com>
+homepage: https://github.com/lejard-h/flutter_google_places_autocomplete
+
+environment:
+  sdk: '>=1.20.1 <2.0.0'
 
 flutter:
 
