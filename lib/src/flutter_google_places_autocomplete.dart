@@ -154,12 +154,18 @@ class _GooglePlacesAutocompleteOverlayState
                       .toList())));
     }
 
-    return new Container(
+    final container = new Container(
         margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
         child: new Stack(children: <Widget>[
           header,
           new Padding(padding: new EdgeInsets.only(top: 48.0), child: body),
         ]));
+
+    if (Platform.isIOS) {
+      return new Padding(
+          padding: new EdgeInsets.only(top: 8.0), child: container);
+    }
+    return container;
   }
 
   Icon get _iconBack => Platform.isIOS
