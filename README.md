@@ -38,3 +38,5 @@ Prediction p = await showGooglePlacesAutocomplete(
                           components: [new Component(Component.country, "fr")]);
 
 ```
+
+The library use [google_maps_webservice](https://github.com/lejard-h/google_maps_webservice) library which directly refer to the official [documentation](https://developers.google.com/maps/web-services/) for google maps web service. 

@@ -19,16 +19,17 @@ class GooglePlacesAutocompleteWidget extends StatefulWidget {
   final bool strictbounds;
   final Mode mode;
 
-  GooglePlacesAutocompleteWidget({@required this.apiKey,
-    this.mode = Mode.fullscreen,
-    this.hint = "Search",
-    this.offset,
-    this.location,
-    this.radius,
-    this.language,
-    this.types,
-    this.components,
-    this.strictbounds});
+  GooglePlacesAutocompleteWidget(
+      {@required this.apiKey,
+      this.mode = Mode.fullscreen,
+      this.hint = "Search",
+      this.offset,
+      this.location,
+      this.radius,
+      this.language,
+      this.types,
+      this.components,
+      this.strictbounds});
 
   @override
   State<GooglePlacesAutocompleteWidget> createState() {
@@ -73,6 +74,11 @@ class _GooglePlacesAutocompleteOverlayState
         _response = response;
         _searching = false;
       });
+    } else {
+      setState(() {
+        _response = null;
+        _searching = false;
+      });
     }
   }
 
@@ -94,13 +100,14 @@ class _GooglePlacesAutocompleteOverlayState
 
   @override
   Widget build(BuildContext context) {
-    var inputHeader = new Column(children: <Widget>[
+    final header = new Column(children: <Widget>[
       new Material(
           color: Colors.white,
           borderRadius: new BorderRadius.only(
               topLeft: new Radius.circular(2.0),
               topRight: new Radius.circular(2.0)),
           child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new IconButton(
                 color: Colors.black45,
@@ -109,30 +116,22 @@ class _GooglePlacesAutocompleteOverlayState
                   Navigator.pop(context);
                 },
               ),
-              new Expanded(
-                  child: new Padding(
-                      padding: new EdgeInsets.only(top: 2.0),
-                      child: _textField())),
+              new Expanded(child: _textField()),
             ],
           )),
       new Divider(
-        height: 1.0,
-      )
+          //height: 1.0,
+          )
     ]);
-
-    var header;
 
     var body;
 
     if (_searching) {
-      header = new Stack(
-        children: <Widget>[inputHeader, new _Loader()],
+      body = new Stack(
+        children: <Widget>[header, new _Loader()],
         alignment: FractionalOffset.bottomCenter,
       );
-    } else {
-      header = inputHeader;
-    }
-    if (_query.text.isEmpty ||
+    } else if (_query.text.isEmpty ||
         _response == null ||
         _response.predictions.isEmpty) {
       body = new Material(
@@ -156,23 +155,18 @@ class _GooglePlacesAutocompleteOverlayState
     }
 
     return new Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
         child: new Stack(children: <Widget>[
-          new Container(
-            constraints: new BoxConstraints(maxHeight: 58.0),
-            child: header,
-          ),
-          new Padding(padding: new EdgeInsets.only(top: 56.0), child: body),
+          header,
+          new Padding(padding: new EdgeInsets.only(top: 48.0), child: body),
         ]));
   }
 
-  Icon get _iconBack =>
-      Platform.isIOS
-          ? new Icon(Icons.arrow_back_ios)
-          : new Icon(Icons.arrow_back);
+  Icon get _iconBack => Platform.isIOS
+      ? new Icon(Icons.arrow_back_ios)
+      : new Icon(Icons.arrow_back);
 
-  _textField() =>
-      new TextField(
+  _textField() => new TextField(
         controller: _query,
         autofocus: true,
         decoration: new InputDecoration(
@@ -214,7 +208,7 @@ class _GooglePlacesAutocompleteFullscreenState
     if (_query.text.isEmpty ||
         _response == null ||
         _response.predictions.isEmpty) {
-      var children = <Widget>[];
+      final children = <Widget>[];
       if (_searching) {
         children.add(new _Loader());
       }
@@ -227,8 +221,10 @@ class _GooglePlacesAutocompleteFullscreenState
     return new Scaffold(appBar: new AppBar(title: _textField()), body: body);
   }
 
-  _textField() =>
-      new TextField(
+  _textField() => new Container(
+      alignment: Alignment.topLeft,
+      margin: new EdgeInsets.only(top: 4.0),
+      child: new TextField(
         controller: _query,
         autofocus: true,
         style: new TextStyle(color: Colors.white70, fontSize: 16.0),
@@ -237,7 +233,7 @@ class _GooglePlacesAutocompleteFullscreenState
             hintStyle: new TextStyle(color: Colors.white30, fontSize: 16.0),
             hideDivider: true),
         onChanged: _search,
-      );
+      ));
 
   Timer _timer;
 
@@ -247,8 +243,7 @@ class _GooglePlacesAutocompleteFullscreenState
         _searching = true;
       });
 
-      final response = await
-      _places.autocomplete(value,
+      final response = await _places.autocomplete(value,
           offset: widget.offset,
           location: widget.location,
           radius: widget.radius,
@@ -259,6 +254,11 @@ class _GooglePlacesAutocompleteFullscreenState
 
       setState(() {
         _response = response;
+        _searching = false;
+      });
+    } else {
+      setState(() {
+        _response = null;
         _searching = false;
       });
     }
@@ -293,9 +293,7 @@ class PoweredByGoogleImage extends StatelessWidget {
           new Padding(
               padding: new EdgeInsets.all(16.0),
               child: new Image.network(
-                Theme
-                    .of(context)
-                    .brightness == Brightness.light
+                Theme.of(context).brightness == Brightness.light
                     ? _poweredByGoogleWhite
                     : _poweredByGoogleBlack,
               ))
@@ -334,29 +332,29 @@ class PredictionTile extends StatelessWidget {
   }
 }
 
-Future<Prediction> showGooglePlacesAutocomplete({@required BuildContext context,
-  @required String apiKey,
-  Mode mode = Mode.fullscreen,
-  String hint = "Search",
-  num offset,
-  Location location,
-  num radius,
-  String language,
-  List<String> types,
-  List<Component> components,
-  bool strictbounds}) {
-  final builder = (BuildContext ctx) =>
-  new GooglePlacesAutocompleteWidget(
-    apiKey: apiKey,
-    mode: mode,
-    language: language,
-    components: components,
-    types: types,
-    location: location,
-    strictbounds: strictbounds,
-    offset: offset,
-    hint: hint,
-  );
+Future<Prediction> showGooglePlacesAutocomplete(
+    {@required BuildContext context,
+    @required String apiKey,
+    Mode mode = Mode.fullscreen,
+    String hint = "Search",
+    num offset,
+    Location location,
+    num radius,
+    String language,
+    List<String> types,
+    List<Component> components,
+    bool strictbounds}) {
+  final builder = (BuildContext ctx) => new GooglePlacesAutocompleteWidget(
+        apiKey: apiKey,
+        mode: mode,
+        language: language,
+        components: components,
+        types: types,
+        location: location,
+        strictbounds: strictbounds,
+        offset: offset,
+        hint: hint,
+      );
 
   if (mode == Mode.overlay) {
     return showDialog(context: context, child: builder(context));
