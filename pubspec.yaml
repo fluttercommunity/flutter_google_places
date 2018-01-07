@@ -7,8 +7,6 @@ homepage: https://github.com/lejard-h/flutter_google_places_autocomplete
 environment:
   sdk: '>=1.20.1 <2.0.0'
 
-flutter:
-
 dependencies:
   flutter:
     sdk: flutter
