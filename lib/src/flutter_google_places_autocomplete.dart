@@ -178,7 +178,7 @@ class _GooglePlacesAutocompleteOverlayState
         decoration: new InputDecoration(
             hintText: widget.hint,
             hintStyle: new TextStyle(color: Colors.black54, fontSize: 16.0),
-            hideDivider: true),
+            border: null),
         onChanged: _search,
       );
 }
@@ -237,7 +237,7 @@ class _GooglePlacesAutocompleteFullscreenState
         decoration: new InputDecoration(
             hintText: widget.hint,
             hintStyle: new TextStyle(color: Colors.white30, fontSize: 16.0),
-            hideDivider: true),
+            border: null),
         onChanged: _search,
       ));
 
