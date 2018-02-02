@@ -1,3 +1,8 @@
+## 0.0.4
+
+- Open widgets to create your own UI
+- add onError callback
+
 ## 0.0.3
 
 - add padding for overlay on iOS
