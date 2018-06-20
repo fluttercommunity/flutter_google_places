@@ -298,6 +298,7 @@ Future<Prediction> showGooglePlacesAutocomplete(
         components: components,
         types: types,
         location: location,
+        radius: radius,
         strictbounds: strictbounds,
         offset: offset,
         hint: hint,
