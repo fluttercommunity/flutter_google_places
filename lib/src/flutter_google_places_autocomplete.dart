@@ -329,7 +329,7 @@ abstract class GooglePlacesAutocompleteState
   }
 
   Future<Null> doSearch(String value) async {
-    if (value.isNotEmpty) {
+    if (mounted && value.isNotEmpty) {
       setState(() {
         searching = true;
       });
@@ -360,14 +360,16 @@ abstract class GooglePlacesAutocompleteState
     _timer?.cancel();
     _timer = new Timer(const Duration(milliseconds: 300), () {
       _timer.cancel();
+      if ()
       doSearch(value);
     });
   }
 
   @override
   void dispose() {
-    super.dispose();
+    _timer?.cancel();
     _places.dispose();
+    super.dispose();
   }
 
   @mustCallSuper
