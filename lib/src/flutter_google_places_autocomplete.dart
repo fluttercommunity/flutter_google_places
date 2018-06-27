@@ -360,8 +360,10 @@ abstract class GooglePlacesAutocompleteState
     _timer?.cancel();
     _timer = new Timer(const Duration(milliseconds: 300), () {
       _timer.cancel();
-      if ()
-      doSearch(value);
+      if (mounted)
+      {
+        doSearch(value);
+      }
     });
   }
 
