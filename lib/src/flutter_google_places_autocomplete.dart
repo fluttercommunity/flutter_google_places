@@ -43,31 +43,27 @@ class GooglePlacesAutocompleteWidget extends StatefulWidget {
     return new _GooglePlacesAutocompleteOverlayState();
   }
 
-  static GooglePlacesAutocompleteState of(BuildContext context) => context
-      .ancestorStateOfType(const TypeMatcher<GooglePlacesAutocompleteState>());
+  static GooglePlacesAutocompleteState of(BuildContext context) =>
+      context.ancestorStateOfType(const TypeMatcher<GooglePlacesAutocompleteState>());
 }
 
-class _GooglePlacesAutocompleteScaffoldState
-    extends GooglePlacesAutocompleteState {
+class _GooglePlacesAutocompleteScaffoldState extends GooglePlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
     final appBar = new AppBar(title: new AppBarPlacesAutoCompleteTextField());
-    final body =
-        new GooglePlacesAutocompleteResult(onTap: Navigator.of(context).pop);
+    final body = new GooglePlacesAutocompleteResult(onTap: Navigator.of(context).pop);
     return new Scaffold(appBar: appBar, body: body);
   }
 }
 
-class _GooglePlacesAutocompleteOverlayState
-    extends GooglePlacesAutocompleteState {
+class _GooglePlacesAutocompleteOverlayState extends GooglePlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
     final header = new Column(children: <Widget>[
       new Material(
           color: Colors.white,
           borderRadius: new BorderRadius.only(
-              topLeft: new Radius.circular(2.0),
-              topRight: new Radius.circular(2.0)),
+              topLeft: new Radius.circular(2.0), topRight: new Radius.circular(2.0)),
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -97,27 +93,23 @@ class _GooglePlacesAutocompleteOverlayState
         children: <Widget>[header, new _Loader()],
         alignment: FractionalOffset.bottomCenter,
       );
-    } else if (query.text.isEmpty ||
-        response == null ||
-        response.predictions.isEmpty) {
+    } else if (query.text.isEmpty || response == null || response.predictions.isEmpty) {
       body = new Material(
         color: Colors.white,
         child: new PoweredByGoogleImage(),
         borderRadius: new BorderRadius.only(
-            bottomLeft: new Radius.circular(2.0),
-            bottomRight: new Radius.circular(2.0)),
+            bottomLeft: new Radius.circular(2.0), bottomRight: new Radius.circular(2.0)),
       );
     } else {
       body = new SingleChildScrollView(
           child: new Material(
               borderRadius: new BorderRadius.only(
-                  bottomLeft: new Radius.circular(2.0),
-                  bottomRight: new Radius.circular(2.0)),
+                  bottomLeft: new Radius.circular(2.0), bottomRight: new Radius.circular(2.0)),
               color: Colors.white,
               child: new ListBody(
                   children: response.predictions
-                      .map((p) => new PredictionTile(
-                          prediction: p, onTap: Navigator.of(context).pop))
+                      .map((p) =>
+                          new PredictionTile(prediction: p, onTap: Navigator.of(context).pop))
                       .toList())));
     }
 
@@ -129,15 +121,13 @@ class _GooglePlacesAutocompleteOverlayState
         ]));
 
     if (Platform.isIOS) {
-      return new Padding(
-          padding: new EdgeInsets.only(top: 8.0), child: container);
+      return new Padding(padding: new EdgeInsets.only(top: 8.0), child: container);
     }
     return container;
   }
 
-  Icon get _iconBack => Platform.isIOS
-      ? new Icon(Icons.arrow_back_ios)
-      : new Icon(Icons.arrow_back);
+  Icon get _iconBack =>
+      Platform.isIOS ? new Icon(Icons.arrow_back_ios) : new Icon(Icons.arrow_back);
 
   Widget _textField() => new TextField(
         controller: query,
@@ -154,8 +144,7 @@ class _Loader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
-        constraints: new BoxConstraints(maxHeight: 2.0),
-        child: new LinearProgressIndicator());
+        constraints: new BoxConstraints(maxHeight: 2.0), child: new LinearProgressIndicator());
   }
 }
 
@@ -165,20 +154,16 @@ class GooglePlacesAutocompleteResult extends StatefulWidget {
   GooglePlacesAutocompleteResult({this.onTap});
 
   @override
-  _GooglePlacesAutocompleteResult createState() =>
-      new _GooglePlacesAutocompleteResult();
+  _GooglePlacesAutocompleteResult createState() => new _GooglePlacesAutocompleteResult();
 }
 
-class _GooglePlacesAutocompleteResult
-    extends State<GooglePlacesAutocompleteResult> {
+class _GooglePlacesAutocompleteResult extends State<GooglePlacesAutocompleteResult> {
   @override
   Widget build(BuildContext context) {
     final state = GooglePlacesAutocompleteWidget.of(context);
     assert(state != null);
 
-    if (state.query.text.isEmpty ||
-        state.response == null ||
-        state.response.predictions.isEmpty) {
+    if (state.query.text.isEmpty || state.response == null || state.response.predictions.isEmpty) {
       final children = <Widget>[];
       if (state.searching) {
         children.add(new _Loader());
@@ -186,8 +171,7 @@ class _GooglePlacesAutocompleteResult
       children.add(new PoweredByGoogleImage());
       return new Stack(children: children);
     }
-    return new PredictionsListView(
-        predictions: state.response.predictions, onTap: widget.onTap);
+    return new PredictionsListView(predictions: state.response.predictions, onTap: widget.onTap);
   }
 }
 
@@ -197,8 +181,7 @@ class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
       new _AppBarPlacesAutoCompleteTextFieldState();
 }
 
-class _AppBarPlacesAutoCompleteTextFieldState
-    extends State<AppBarPlacesAutoCompleteTextField> {
+class _AppBarPlacesAutoCompleteTextFieldState extends State<AppBarPlacesAutoCompleteTextField> {
   @override
   Widget build(BuildContext context) {
     final state = GooglePlacesAutocompleteWidget.of(context);
@@ -228,17 +211,15 @@ class PoweredByGoogleImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Padding(
-              padding: new EdgeInsets.all(16.0),
-              child: new Image.network(
-                Theme.of(context).brightness == Brightness.light
-                    ? _poweredByGoogleWhite
-                    : _poweredByGoogleBlack,
-              ))
-        ]);
+    return new Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      new Padding(
+          padding: new EdgeInsets.all(16.0),
+          child: new Image.network(
+            Theme.of(context).brightness == Brightness.light
+                ? _poweredByGoogleWhite
+                : _poweredByGoogleBlack,
+          ))
+    ]);
   }
 }
 
@@ -252,8 +233,7 @@ class PredictionsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListView(
         children: predictions
-            .map((Prediction p) =>
-                new PredictionTile(prediction: p, onTap: onTap))
+            .map((Prediction p) => new PredictionTile(prediction: p, onTap: onTap))
             .toList());
   }
 }
@@ -313,8 +293,7 @@ Future<Prediction> showGooglePlacesAutocomplete(
 
 enum Mode { overlay, fullscreen }
 
-abstract class GooglePlacesAutocompleteState
-    extends State<GooglePlacesAutocompleteWidget> {
+abstract class GooglePlacesAutocompleteState extends State<GooglePlacesAutocompleteWidget> {
   TextEditingController query;
   PlacesAutocompleteResponse response;
   GoogleMapsPlaces _places;
@@ -329,7 +308,7 @@ abstract class GooglePlacesAutocompleteState
   }
 
   Future<Null> doSearch(String value) async {
-    if (value.isNotEmpty) {
+    if (mounted && value.isNotEmpty) {
       setState(() {
         searching = true;
       });
@@ -343,8 +322,7 @@ abstract class GooglePlacesAutocompleteState
           components: widget.components,
           strictbounds: widget.strictbounds);
 
-      if (res.errorMessage?.isNotEmpty == true ||
-          res.status == "REQUEST_DENIED") {
+      if (res.errorMessage?.isNotEmpty == true || res.status == "REQUEST_DENIED") {
         onResponseError(res);
       } else {
         onResponse(res);
@@ -366,26 +344,31 @@ abstract class GooglePlacesAutocompleteState
 
   @override
   void dispose() {
-    super.dispose();
+    _timer?.cancel();
     _places.dispose();
+    super.dispose();
   }
 
   @mustCallSuper
   void onResponseError(PlacesAutocompleteResponse res) {
-    if (widget.onError != null) {
-      widget.onError(res);
+    if (mounted) {
+      if (widget.onError != null) {
+        widget.onError(res);
+      }
+      setState(() {
+        response = null;
+        searching = false;
+      });
     }
-    setState(() {
-      response = null;
-      searching = false;
-    });
   }
 
   @mustCallSuper
   void onResponse(PlacesAutocompleteResponse res) {
-    setState(() {
-      response = res;
-      searching = false;
-    });
+    if (mounted) {
+      setState(() {
+        response = res;
+        searching = false;
+      });
+    }
   }
 }
