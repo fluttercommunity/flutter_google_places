@@ -214,17 +214,26 @@ class _AppBarPlacesAutoCompleteTextFieldState
           decoration: new InputDecoration(
               hintText: state.widget.hint,
               hintStyle: new TextStyle(color: Colors.white30, fontSize: 16.0),
-              border: null),
+              border: null), //try to delete 
           onChanged: state.search,
         ));
   }
 }
 
 class PoweredByGoogleImage extends StatelessWidget {
+//Okey, let's start with icon.
+//You can download 1x, 2x and 3x-sized icons right here: https://developers.google.com/maps/documentation/images/powered_by_google.zip
+//After that, you'll fix pixelation on icons. So, in official flutter website, you can find how to add image assets with
+//different sizes. I don't really know how to create PR with my own files and directories, so I hope you have time to do that.
   final _poweredByGoogleWhite =
-      "https://developers.google.com/places/documentation/images/powered-by-google-on-white.png";
+      "assets/powered-by-google-on-white.png";
+  //It will automatically find an icon that a device need.
+  //The structure of your project will be smth like: 
+  //assets/icon.png
+  //assets/2.0x/icon.png
+  //assets/3.0x/icon.png etc.
   final _poweredByGoogleBlack =
-      "https://developers.google.com/places/documentation/images/powered-by-google-on-non-white.png";
+      "assets/powered-by-google-on-non-white.png";
 
   @override
   Widget build(BuildContext context) {
@@ -233,11 +242,11 @@ class PoweredByGoogleImage extends StatelessWidget {
         children: <Widget>[
           new Padding(
               padding: new EdgeInsets.all(16.0),
-              child: new Image.network(
+              child: new Image.asset(
                 Theme.of(context).brightness == Brightness.light
                     ? _poweredByGoogleWhite
                     : _poweredByGoogleBlack,
-              ))
+              )) // Even if Google Places API requests internet connection, it's much better to use pre-downloaded assets.
         ]);
   }
 }
