@@ -1,7 +1,14 @@
-## 0.0.5
+## 0.1.1
 
 - fix icons quality
 - fix input border when custom theme
+
+## 0.1.0
+
+ - update sdk and fix warnings
+
+## 0.0.5
+  fix usage of radius
 
 ## 0.0.4
 

@@ -300,6 +300,7 @@ Future<Prediction> showGooglePlacesAutocomplete(
         components: components,
         types: types,
         location: location,
+        radius: radius,
         strictbounds: strictbounds,
         offset: offset,
         hint: hint,
@@ -339,7 +340,7 @@ abstract class GooglePlacesAutocompleteState
   }
 
   Future<Null> doSearch(String value) async {
-    if (value.isNotEmpty) {
+    if (mounted && value.isNotEmpty) {
       setState(() {
         _searching = true;
       });
