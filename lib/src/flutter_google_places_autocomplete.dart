@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:rxdart/rxdart.dart';
 
 class GooglePlacesAutocompleteWidget extends StatefulWidget {
   final String apiKey;
@@ -20,20 +21,20 @@ class GooglePlacesAutocompleteWidget extends StatefulWidget {
   final Mode mode;
   final ValueChanged<PlacesAutocompleteResponse> onError;
 
-  GooglePlacesAutocompleteWidget(
-      {@required this.apiKey,
-      this.mode = Mode.fullscreen,
-      this.hint = "Search",
-      this.offset,
-      this.location,
-      this.radius,
-      this.language,
-      this.types,
-      this.components,
-      this.strictbounds,
-      this.onError,
-      Key key})
-      : super(key: key);
+  GooglePlacesAutocompleteWidget({
+    @required this.apiKey,
+    this.mode = Mode.fullscreen,
+    this.hint = "Search",
+    this.offset,
+    this.location,
+    this.radius,
+    this.language,
+    this.types,
+    this.components,
+    this.strictbounds,
+    this.onError,
+    Key key,
+  }) : super(key: key);
 
   @override
   State<GooglePlacesAutocompleteWidget> createState() {
@@ -92,14 +93,14 @@ class _GooglePlacesAutocompleteOverlayState
 
     var body;
 
-    if (searching) {
+    if (_searching) {
       body = new Stack(
-        children: <Widget>[header, new _Loader()],
+        children: <Widget>[new _Loader()],
         alignment: FractionalOffset.bottomCenter,
       );
-    } else if (query.text.isEmpty ||
-        response == null ||
-        response.predictions.isEmpty) {
+    } else if (_queryTextController.text.isEmpty ||
+        _response == null ||
+        _response.predictions.isEmpty) {
       body = new Material(
         color: Colors.white,
         child: new PoweredByGoogleImage(),
@@ -115,7 +116,7 @@ class _GooglePlacesAutocompleteOverlayState
                   bottomRight: new Radius.circular(2.0)),
               color: Colors.white,
               child: new ListBody(
-                  children: response.predictions
+                  children: _response.predictions
                       .map((p) => new PredictionTile(
                           prediction: p, onTap: Navigator.of(context).pop))
                       .toList())));
@@ -140,13 +141,13 @@ class _GooglePlacesAutocompleteOverlayState
       : new Icon(Icons.arrow_back);
 
   Widget _textField() => new TextField(
-        controller: query,
+        controller: _queryTextController,
         autofocus: true,
         decoration: new InputDecoration(
-            hintText: widget.hint,
-            hintStyle: new TextStyle(color: Colors.black54, fontSize: 16.0),
-            border: null),
-        onChanged: search,
+          hintText: widget.hint,
+          hintStyle: new TextStyle(color: Colors.black54, fontSize: 16.0),
+          border: InputBorder.none,
+        ),
       );
 }
 
@@ -176,18 +177,18 @@ class _GooglePlacesAutocompleteResult
     final state = GooglePlacesAutocompleteWidget.of(context);
     assert(state != null);
 
-    if (state.query.text.isEmpty ||
-        state.response == null ||
-        state.response.predictions.isEmpty) {
+    if (state._queryTextController.text.isEmpty ||
+        state._response == null ||
+        state._response.predictions.isEmpty) {
       final children = <Widget>[];
-      if (state.searching) {
+      if (state._searching) {
         children.add(new _Loader());
       }
       children.add(new PoweredByGoogleImage());
       return new Stack(children: children);
     }
     return new PredictionsListView(
-        predictions: state.response.predictions, onTap: widget.onTap);
+        predictions: state._response.predictions, onTap: widget.onTap);
   }
 }
 
@@ -208,23 +209,23 @@ class _AppBarPlacesAutoCompleteTextFieldState
         alignment: Alignment.topLeft,
         margin: new EdgeInsets.only(top: 4.0),
         child: new TextField(
-          controller: state.query,
+          controller: state._queryTextController,
           autofocus: true,
           style: new TextStyle(color: Colors.white70, fontSize: 16.0),
           decoration: new InputDecoration(
-              hintText: state.widget.hint,
-              hintStyle: new TextStyle(color: Colors.white30, fontSize: 16.0),
-              border: null),
-          onChanged: state.search,
+            hintText: state.widget.hint,
+            hintStyle: new TextStyle(color: Colors.white30, fontSize: 16.0),
+            border: InputBorder.none,
+          ),
         ));
   }
 }
 
 class PoweredByGoogleImage extends StatelessWidget {
   final _poweredByGoogleWhite =
-      "https://developers.google.com/places/documentation/images/powered-by-google-on-white.png";
+      "packages/flutter_google_places_autocomplete/assets/google_white.png";
   final _poweredByGoogleBlack =
-      "https://developers.google.com/places/documentation/images/powered-by-google-on-non-white.png";
+      "packages/flutter_google_places_autocomplete/assets/google_black.png";
 
   @override
   Widget build(BuildContext context) {
@@ -233,10 +234,11 @@ class PoweredByGoogleImage extends StatelessWidget {
         children: <Widget>[
           new Padding(
               padding: new EdgeInsets.all(16.0),
-              child: new Image.network(
+              child: new Image.asset(
                 Theme.of(context).brightness == Brightness.light
                     ? _poweredByGoogleWhite
                     : _poweredByGoogleBlack,
+                scale: 2.5,
               ))
         ]);
   }
@@ -305,7 +307,7 @@ Future<Prediction> showGooglePlacesAutocomplete(
       );
 
   if (mode == Mode.overlay) {
-    return showDialog(context: context, child: builder(context));
+    return showDialog(context: context, builder: builder);
   }
   return Navigator.push(context, new MaterialPageRoute(builder: builder));
 }
@@ -314,23 +316,32 @@ enum Mode { overlay, fullscreen }
 
 abstract class GooglePlacesAutocompleteState
     extends State<GooglePlacesAutocompleteWidget> {
-  TextEditingController query;
-  PlacesAutocompleteResponse response;
+  TextEditingController _queryTextController;
+  PlacesAutocompleteResponse _response;
   GoogleMapsPlaces _places;
-  bool searching;
+  bool _searching;
+
+  final _queryBehavior = BehaviorSubject<String>(seedValue: '');
 
   @override
   void initState() {
     super.initState();
-    query = new TextEditingController(text: "");
+    _queryTextController = new TextEditingController(text: "");
+
     _places = new GoogleMapsPlaces(widget.apiKey);
-    searching = false;
+    _searching = false;
+
+    _queryTextController.addListener(_onQueryChange);
+
+    _queryBehavior.stream
+        .debounce(const Duration(milliseconds: 300))
+        .listen(doSearch);
   }
 
   Future<Null> doSearch(String value) async {
     if (value.isNotEmpty) {
       setState(() {
-        searching = true;
+        _searching = true;
       });
 
       final res = await _places.autocomplete(value,
@@ -353,38 +364,39 @@ abstract class GooglePlacesAutocompleteState
     }
   }
 
-  Timer _timer;
-
-  Future<Null> search(String value) async {
-    _timer?.cancel();
-    _timer = new Timer(const Duration(milliseconds: 300), () {
-      _timer.cancel();
-      doSearch(value);
-    });
+  void _onQueryChange() {
+    _queryBehavior.add(_queryTextController.text);
   }
 
   @override
   void dispose() {
     super.dispose();
+
     _places.dispose();
+    _queryBehavior.close();
+    _queryTextController.removeListener(_onQueryChange);
   }
 
   @mustCallSuper
   void onResponseError(PlacesAutocompleteResponse res) {
+    if (!mounted) return;
+
     if (widget.onError != null) {
       widget.onError(res);
     }
     setState(() {
-      response = null;
-      searching = false;
+      _response = null;
+      _searching = false;
     });
   }
 
   @mustCallSuper
   void onResponse(PlacesAutocompleteResponse res) {
+    if (!mounted) return;
+
     setState(() {
-      response = res;
-      searching = false;
+      _response = res;
+      _searching = false;
     });
   }
 }

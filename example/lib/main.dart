@@ -11,7 +11,14 @@ GoogleMapsPlaces _places = new GoogleMapsPlaces(kGoogleApiKey);
 main() {
   runApp(new MaterialApp(
     title: "My App",
-    theme: new ThemeData(accentColor: Colors.redAccent),
+    theme: new ThemeData(
+      accentColor: Colors.redAccent,
+      inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.00))),
+          contentPadding:
+              EdgeInsets.symmetric(vertical: 12.50, horizontal: 10.00)),
+    ),
     routes: {
       "/": (_) => new MyApp(),
       "/search": (_) => new CustomSearchScaffold()

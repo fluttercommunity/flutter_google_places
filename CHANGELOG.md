@@ -1,3 +1,8 @@
+## 0.0.5
+
+- fix icons quality
+- fix input border when custom theme
+
 ## 0.0.4
 
 - Open widgets to create your own UI
