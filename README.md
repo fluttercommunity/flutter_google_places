@@ -1,4 +1,7 @@
 # flutter_google_places_autocomplete
+<p align="left">
+  <a href="https://pub.dartlang.org/packages/flutter_google_places_autocomplete"><img alt="pub version" src="https://img.shields.io/pub/v/flutter_google_places_autocomplete.svg?style=flat-square"></a>
+</p>
 
 Google places autocomplete widgets for flutter.
 
