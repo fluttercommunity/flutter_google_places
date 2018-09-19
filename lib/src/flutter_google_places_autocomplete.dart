@@ -19,6 +19,7 @@ class GooglePlacesAutocompleteWidget extends StatefulWidget {
   final List<Component> components;
   final bool strictbounds;
   final Mode mode;
+  final Widget footer;
   final ValueChanged<PlacesAutocompleteResponse> onError;
 
   GooglePlacesAutocompleteWidget({
@@ -32,6 +33,7 @@ class GooglePlacesAutocompleteWidget extends StatefulWidget {
     this.types,
     this.components,
     this.strictbounds,
+    this.footer,
     this.onError,
     Key key,
   }) : super(key: key);
@@ -103,7 +105,7 @@ class _GooglePlacesAutocompleteOverlayState
         _response.predictions.isEmpty) {
       body = new Material(
         color: Colors.white,
-        child: new PoweredByGoogleImage(),
+        child: widget.footer != null ? widget.footer : new PoweredByGoogleImage(),
         borderRadius: new BorderRadius.only(
             bottomLeft: new Radius.circular(2.0),
             bottomRight: new Radius.circular(2.0)),
@@ -184,7 +186,7 @@ class _GooglePlacesAutocompleteResult
       if (state._searching) {
         children.add(new _Loader());
       }
-      children.add(new PoweredByGoogleImage());
+      children.add(widget.footer != null ? widget.footer : new PoweredByGoogleImage());
       return new Stack(children: children);
     }
     return new PredictionsListView(
@@ -292,6 +294,7 @@ Future<Prediction> showGooglePlacesAutocomplete(
     List<String> types,
     List<Component> components,
     bool strictbounds,
+    Widget footer,
     ValueChanged<PlacesAutocompleteResponse> onError}) {
   final builder = (BuildContext ctx) => new GooglePlacesAutocompleteWidget(
         apiKey: apiKey,
@@ -304,6 +307,7 @@ Future<Prediction> showGooglePlacesAutocomplete(
         strictbounds: strictbounds,
         offset: offset,
         hint: hint,
+        footer: footer,
         onError: onError,
       );
 
