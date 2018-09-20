@@ -186,7 +186,7 @@ class _GooglePlacesAutocompleteResult
       if (state._searching) {
         children.add(new _Loader());
       }
-      children.add(widget.footer != null ? widget.footer : new PoweredByGoogleImage());
+      children.add(new PoweredByGoogleImage());
       return new Stack(children: children);
     }
     return new PredictionsListView(
