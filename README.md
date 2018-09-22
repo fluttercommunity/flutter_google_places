@@ -7,10 +7,10 @@ Google places autocomplete widgets for flutter.
 
 <div style="text-align: center"><table><tr>
     <td style="text-align: center">
-<img src="https://github.com/lejard-h/flutter_google_places_autocomplete/blob/master/flutter_01.png" height="400">
+<img src="https://github.com/lejard-h/flutter_google_places/blob/master/flutter_01.png" height="400">
 </td>
 <td style="text-align: center">
-<img src="https://github.com/lejard-h/flutter_google_places_autocomplete/blob/master/flutter_02.png" height="400">
+<img src="https://github.com/lejard-h/flutter_google_places/blob/master/flutter_02.png" height="400">
 </td>
 </tr>
 </table>
