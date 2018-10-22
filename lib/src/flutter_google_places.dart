@@ -62,16 +62,20 @@ class _PlacesAutocompleteScaffoldState extends PlacesAutocompleteState {
 class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final header = Column(children: <Widget>[
       Material(
-          color: Colors.white,
+          color: theme.dialogBackgroundColor,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(2.0), topRight: Radius.circular(2.0)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               IconButton(
-                color: Colors.black45,
+                color: theme.brightness == Brightness.light
+                    ? Colors.black45
+                    : null,
                 icon: _iconBack,
                 onPressed: () {
                   Navigator.pop(context);
@@ -79,7 +83,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               ),
               Expanded(
                   child: Padding(
-                child: _textField(),
+                child: _textField(context),
                 padding: const EdgeInsets.only(right: 8.0),
               )),
             ],
@@ -100,7 +104,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
         _response == null ||
         _response.predictions.isEmpty) {
       body = Material(
-        color: Colors.white,
+        color: theme.dialogBackgroundColor,
         child: widget.footer != null ? widget.footer : PoweredByGoogleImage(),
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(2.0),
@@ -108,16 +112,24 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       );
     } else {
       body = SingleChildScrollView(
-          child: Material(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(2.0),
-                  bottomRight: Radius.circular(2.0)),
-              color: Colors.white,
-              child: ListBody(
-                  children: _response.predictions
-                      .map((p) => PredictionTile(
-                          prediction: p, onTap: Navigator.of(context).pop))
-                      .toList())));
+        child: Material(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(2.0),
+            bottomRight: Radius.circular(2.0),
+          ),
+          color: theme.dialogBackgroundColor,
+          child: ListBody(
+            children: _response.predictions
+                .map(
+                  (p) => PredictionTile(
+                        prediction: p,
+                        onTap: Navigator.of(context).pop,
+                      ),
+                )
+                .toList(),
+          ),
+        ),
+      );
     }
 
     final container = Container(
@@ -136,12 +148,22 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   Icon get _iconBack =>
       Platform.isIOS ? Icon(Icons.arrow_back_ios) : Icon(Icons.arrow_back);
 
-  Widget _textField() => TextField(
+  Widget _textField(BuildContext context) => TextField(
         controller: _queryTextController,
         autofocus: true,
+        style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black87
+                : null,
+            fontSize: 16.0),
         decoration: InputDecoration(
           hintText: widget.hint,
-          hintStyle: TextStyle(color: Colors.black54, fontSize: 16.0),
+          hintStyle: TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black45
+                : null,
+            fontSize: 16.0,
+          ),
           border: InputBorder.none,
         ),
       );
@@ -182,7 +204,9 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
       return Stack(children: children);
     }
     return PredictionsListView(
-        predictions: state._response.predictions, onTap: widget.onTap);
+      predictions: state._response.predictions,
+      onTap: widget.onTap,
+    );
   }
 }
 
@@ -205,10 +229,16 @@ class _AppBarPlacesAutoCompleteTextFieldState
         child: TextField(
           controller: state._queryTextController,
           autofocus: true,
-          style: TextStyle(color: Colors.white70, fontSize: 16.0),
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: 16.0,
+          ),
           decoration: InputDecoration(
             hintText: state.widget.hint,
-            hintStyle: TextStyle(color: Colors.white30, fontSize: 16.0),
+            hintStyle: TextStyle(
+              color: Colors.white30,
+              fontSize: 16.0,
+            ),
             border: InputBorder.none,
           ),
         ));
@@ -245,9 +275,10 @@ class PredictionsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-        children: predictions
-            .map((Prediction p) => PredictionTile(prediction: p, onTap: onTap))
-            .toList());
+      children: predictions
+          .map((Prediction p) => PredictionTile(prediction: p, onTap: onTap))
+          .toList(),
+    );
   }
 }
 
