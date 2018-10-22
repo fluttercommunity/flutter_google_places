@@ -10,18 +10,32 @@ const kGoogleApiKey = "API_KEY";
 GoogleMapsPlaces _places = GoogleMapsPlaces(kGoogleApiKey);
 
 main() {
-  runApp(MaterialApp(
-    title: "My App",
-    theme: ThemeData(
-      accentColor: Colors.redAccent,
-      inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4.00))),
-          contentPadding:
-              EdgeInsets.symmetric(vertical: 12.50, horizontal: 10.00)),
-    ),
-    routes: {"/": (_) => MyApp(), "/search": (_) => CustomSearchScaffold()},
-  ));
+  runApp(RoutesWidget());
+}
+
+class RoutesWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        title: "My App",
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          brightness: Brightness.dark,
+          accentColor: Colors.redAccent,
+          inputDecorationTheme: InputDecorationTheme(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.00)),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: 12.50,
+              horizontal: 10.00,
+            ),
+          ),
+        ),
+        routes: {
+          "/": (_) => MyApp(),
+          "/search": (_) => CustomSearchScaffold(),
+        },
+      );
 }
 
 class MyApp extends StatefulWidget {

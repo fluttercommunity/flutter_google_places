@@ -1,4 +1,4 @@
-# flutter_google_places_autocomplete
+# flutter_google_places
 <p align="left">
   <a href="https://pub.dartlang.org/packages/flutter_google_places"><img alt="pub version" src="https://img.shields.io/pub/v/flutter_google_places.svg?style=flat-square"></a>
 </p>

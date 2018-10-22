@@ -1,3 +1,7 @@
+## 0.1.2
+
+- fix dark mode
+
 ## 0.1.1
 
 - fix icons quality
