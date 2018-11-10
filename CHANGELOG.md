@@ -1,3 +1,7 @@
+## 0.1.3
+
+- update rxdart
+
 ## 0.1.2
 
 - fix dark mode
