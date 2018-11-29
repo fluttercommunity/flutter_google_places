@@ -19,7 +19,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final List<Component> components;
   final bool strictbounds;
   final Mode mode;
-  final Widget footer;
+  final Widget logo;
   final ValueChanged<PlacesAutocompleteResponse> onError;
 
   PlacesAutocompleteWidget({
@@ -33,7 +33,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.types,
     this.components,
     this.strictbounds,
-    this.footer,
+    this.logo,
     this.onError,
     Key key,
   }) : super(key: key);
@@ -54,7 +54,10 @@ class _PlacesAutocompleteScaffoldState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
-    final body = PlacesAutocompleteResult(onTap: Navigator.of(context).pop);
+    final body = PlacesAutocompleteResult(
+      onTap: Navigator.of(context).pop,
+      logo: widget.logo,
+    );
     return Scaffold(appBar: appBar, body: body);
   }
 }
@@ -105,7 +108,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
         _response.predictions.isEmpty) {
       body = Material(
         color: theme.dialogBackgroundColor,
-        child: widget.footer != null ? widget.footer : PoweredByGoogleImage(),
+        child: widget.logo ?? PoweredByGoogleImage(),
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(2.0),
             bottomRight: Radius.circular(2.0)),
@@ -180,8 +183,9 @@ class _Loader extends StatelessWidget {
 
 class PlacesAutocompleteResult extends StatefulWidget {
   final ValueChanged<Prediction> onTap;
+  final Widget logo;
 
-  PlacesAutocompleteResult({this.onTap});
+  PlacesAutocompleteResult({this.onTap, this.logo});
 
   @override
   _PlacesAutocompleteResult createState() => _PlacesAutocompleteResult();
@@ -200,7 +204,7 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
       if (state._searching) {
         children.add(_Loader());
       }
-      children.add(PoweredByGoogleImage());
+      children.add(widget.logo ?? PoweredByGoogleImage());
       return Stack(children: children);
     }
     return PredictionsListView(
@@ -403,7 +407,7 @@ class PlacesAutocomplete {
       List<String> types,
       List<Component> components,
       bool strictbounds,
-      Widget footer,
+      Widget logo,
       ValueChanged<PlacesAutocompleteResponse> onError}) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
@@ -416,7 +420,7 @@ class PlacesAutocomplete {
           strictbounds: strictbounds,
           offset: offset,
           hint: hint,
-          footer: footer,
+          logo: logo,
           onError: onError,
         );
 

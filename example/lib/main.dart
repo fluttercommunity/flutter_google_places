@@ -13,24 +13,26 @@ main() {
   runApp(RoutesWidget());
 }
 
+final customTheme = ThemeData(
+  primarySwatch: Colors.blue,
+  brightness: Brightness.dark,
+  accentColor: Colors.redAccent,
+  inputDecorationTheme: InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(4.00)),
+    ),
+    contentPadding: EdgeInsets.symmetric(
+      vertical: 12.50,
+      horizontal: 10.00,
+    ),
+  ),
+);
+
 class RoutesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: "My App",
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          brightness: Brightness.dark,
-          accentColor: Colors.redAccent,
-          inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4.00)),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 12.50,
-              horizontal: 10.00,
-            ),
-          ),
-        ),
+        theme: customTheme,
         routes: {
           "/": (_) => MyApp(),
           "/search": (_) => CustomSearchScaffold(),
@@ -60,37 +62,11 @@ class _MyAppState extends State<MyApp> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          DropdownButton(
-              value: _mode,
-              items: <DropdownMenuItem<Mode>>[
-                DropdownMenuItem<Mode>(
-                    child: Text("Overlay"), value: Mode.overlay),
-                DropdownMenuItem<Mode>(
-                    child: Text("Fullscreen"), value: Mode.fullscreen),
-              ],
-              onChanged: (m) {
-                setState(() {
-                  _mode = m;
-                });
-              }),
+          _buildDropdownMenu(),
           RaisedButton(
-              onPressed: () async {
-                // show input autocomplete with selected mode
-                // then get the Prediction selected
-                Prediction p = await PlacesAutocomplete.show(
-                    context: context,
-                    apiKey: kGoogleApiKey,
-                    onError: (res) {
-                      homeScaffoldKey.currentState.showSnackBar(
-                          SnackBar(content: Text(res.errorMessage)));
-                    },
-                    mode: _mode,
-                    language: "fr",
-                    components: [Component(Component.country, "fr")]);
-
-                displayPrediction(p, homeScaffoldKey.currentState);
-              },
-              child: Text("Search places")),
+            onPressed: _handlePressButton,
+            child: Text("Search places"),
+          ),
           RaisedButton(
             child: Text("Custom"),
             onPressed: () {
@@ -101,6 +77,46 @@ class _MyAppState extends State<MyApp> {
       )),
     );
   }
+
+  Widget _buildDropdownMenu() => DropdownButton(
+        value: _mode,
+        items: <DropdownMenuItem<Mode>>[
+          DropdownMenuItem<Mode>(
+            child: Text("Overlay"),
+            value: Mode.overlay,
+          ),
+          DropdownMenuItem<Mode>(
+            child: Text("Fullscreen"),
+            value: Mode.fullscreen,
+          ),
+        ],
+        onChanged: (m) {
+          setState(() {
+            _mode = m;
+          });
+        },
+      );
+
+  void onError(PlacesAutocompleteResponse response) {
+    homeScaffoldKey.currentState.showSnackBar(
+      SnackBar(content: Text(response.errorMessage)),
+    );
+  }
+
+  Future<void> _handlePressButton() async {
+    // show input autocomplete with selected mode
+    // then get the Prediction selected
+    Prediction p = await PlacesAutocomplete.show(
+      context: context,
+      apiKey: kGoogleApiKey,
+      onError: onError,
+      mode: _mode,
+      language: "fr",
+      components: [Component(Component.country, "fr")],
+    );
+
+    displayPrediction(p, homeScaffoldKey.currentState);
+  }
 }
 
 Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
@@ -110,8 +126,9 @@ Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
     final lat = detail.result.geometry.location.lat;
     final lng = detail.result.geometry.location.lng;
 
-    scaffold
-        .showSnackBar(SnackBar(content: Text("${p.description} - $lat/$lng")));
+    scaffold.showSnackBar(
+      SnackBar(content: Text("${p.description} - $lat/$lng")),
+    );
   }
 }
 
@@ -134,9 +151,15 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
-    final body = PlacesAutocompleteResult(onTap: (p) {
-      displayPrediction(p, searchScaffoldKey.currentState);
-    });
+    final body = PlacesAutocompleteResult(
+      onTap: (p) {
+        displayPrediction(p, searchScaffoldKey.currentState);
+      },
+      logo: Row(
+        children: [FlutterLogo()],
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
+    );
     return Scaffold(key: searchScaffoldKey, appBar: appBar, body: body);
   }
 

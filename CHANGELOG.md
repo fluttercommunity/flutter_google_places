@@ -1,3 +1,7 @@
+## 0.1.4
+
+- Rename footer to logo to be less confusing
+
 ## 0.1.3
 
 - update rxdart
