@@ -321,7 +321,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     super.initState();
     _queryTextController = TextEditingController(text: "");
 
-    _places = GoogleMapsPlaces(widget.apiKey);
+    _places = GoogleMapsPlaces(apiKey: widget.apiKey);
     _searching = false;
 
     _queryTextController.addListener(_onQueryChange);
@@ -337,14 +337,16 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         _searching = true;
       });
 
-      final res = await _places.autocomplete(value,
-          offset: widget.offset,
-          location: widget.location,
-          radius: widget.radius,
-          language: widget.language,
-          types: widget.types,
-          components: widget.components,
-          strictbounds: widget.strictbounds);
+      final res = await _places.autocomplete(
+        value,
+        offset: widget.offset,
+        location: widget.location,
+        radius: widget.radius,
+        language: widget.language,
+        types: widget.types,
+        components: widget.components,
+        strictbounds: widget.strictbounds,
+      );
 
       if (res.errorMessage?.isNotEmpty == true ||
           res.status == "REQUEST_DENIED") {
