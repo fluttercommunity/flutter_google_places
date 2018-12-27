@@ -15,6 +15,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final num offset;
   final num radius;
   final String language;
+  final String sessionToken;
   final List<String> types;
   final List<Component> components;
   final bool strictbounds;
@@ -30,6 +31,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.location,
     this.radius,
     this.language,
+    this.sessionToken,
     this.types,
     this.components,
     this.strictbounds,
@@ -343,6 +345,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         location: widget.location,
         radius: widget.radius,
         language: widget.language,
+        sessionToken: widget.sessionToken,
         types: widget.types,
         components: widget.components,
         strictbounds: widget.strictbounds,
@@ -406,6 +409,7 @@ class PlacesAutocomplete {
       Location location,
       num radius,
       String language,
+      String sessionToken,
       List<String> types,
       List<Component> components,
       bool strictbounds,
@@ -415,6 +419,7 @@ class PlacesAutocomplete {
           apiKey: apiKey,
           mode: mode,
           language: language,
+          sessionToken: sessionToken,
           components: components,
           types: types,
           location: location,
