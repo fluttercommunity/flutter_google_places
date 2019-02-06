@@ -23,22 +23,31 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final Widget logo;
   final ValueChanged<PlacesAutocompleteResponse> onError;
 
-  PlacesAutocompleteWidget({
-    @required this.apiKey,
-    this.mode = Mode.fullscreen,
-    this.hint = "Search",
-    this.offset,
-    this.location,
-    this.radius,
-    this.language,
-    this.sessionToken,
-    this.types,
-    this.components,
-    this.strictbounds,
-    this.logo,
-    this.onError,
-    Key key,
-  }) : super(key: key);
+  /// optional - sets 'proxy' value in google_maps_webservice
+  ///
+  /// In case of using a proxy the baseUrl can be set.
+  /// The apiKey is not required in case the proxy sets it.
+  /// (Not storing the apiKey in the app is good practice)
+
+  final String proxyBaseUrl;
+
+  PlacesAutocompleteWidget(
+      {@required this.apiKey,
+      this.mode = Mode.fullscreen,
+      this.hint = "Search",
+      this.offset,
+      this.location,
+      this.radius,
+      this.language,
+      this.sessionToken,
+      this.types,
+      this.components,
+      this.strictbounds,
+      this.logo,
+      this.onError,
+      Key key,
+      this.proxyBaseUrl})
+      : super(key: key);
 
   @override
   State<PlacesAutocompleteWidget> createState() {
@@ -323,7 +332,14 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     super.initState();
     _queryTextController = TextEditingController(text: "");
 
-    _places = GoogleMapsPlaces(apiKey: widget.apiKey);
+    if (widget.proxyBaseUrl != null) {
+      _places = GoogleMapsPlaces(
+        apiKey: widget.apiKey,
+        baseUrl: widget.proxyBaseUrl,
+      );
+    } else {
+      _places = GoogleMapsPlaces(apiKey: widget.apiKey);
+    }
     _searching = false;
 
     _queryTextController.addListener(_onQueryChange);
