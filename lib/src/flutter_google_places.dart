@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:http/http.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PlacesAutocompleteWidget extends StatefulWidget {
@@ -31,6 +32,12 @@ class PlacesAutocompleteWidget extends StatefulWidget {
 
   final String proxyBaseUrl;
 
+  /// optional - set 'client' value in google_maps_webservice
+  /// 
+  /// In case of using a proxy url that requires authentication
+  /// or custom configuration
+  final BaseClient httpClient;
+
   PlacesAutocompleteWidget(
       {@required this.apiKey,
       this.mode = Mode.fullscreen,
@@ -46,7 +53,8 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.logo,
       this.onError,
       Key key,
-      this.proxyBaseUrl})
+      this.proxyBaseUrl,
+      this.httpClient})
       : super(key: key);
 
   @override
@@ -332,14 +340,11 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     super.initState();
     _queryTextController = TextEditingController(text: "");
 
-    if (widget.proxyBaseUrl != null) {
       _places = GoogleMapsPlaces(
         apiKey: widget.apiKey,
         baseUrl: widget.proxyBaseUrl,
+        httpClient: widget.httpClient
       );
-    } else {
-      _places = GoogleMapsPlaces(apiKey: widget.apiKey);
-    }
     _searching = false;
 
     _queryTextController.addListener(_onQueryChange);
@@ -431,7 +436,8 @@ class PlacesAutocomplete {
       bool strictbounds,
       Widget logo,
       ValueChanged<PlacesAutocompleteResponse> onError,
-      String proxyBaseUrl}) {
+      String proxyBaseUrl,
+      Client httpClient}) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
           mode: mode,
@@ -447,6 +453,7 @@ class PlacesAutocomplete {
           logo: logo,
           onError: onError,
           proxyBaseUrl: proxyBaseUrl,
+          httpClient: httpClient
         );
 
     if (mode == Mode.overlay) {
