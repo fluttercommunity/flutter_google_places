@@ -6,3 +6,4 @@
 packages
 pubspec.lock
 *.iml
+build
