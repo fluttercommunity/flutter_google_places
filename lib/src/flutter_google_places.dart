@@ -236,13 +236,21 @@ class _AppBarPlacesAutoCompleteTextFieldState
           controller: state._queryTextController,
           autofocus: true,
           style: TextStyle(
-            color: Colors.white70,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.9)
+                : Colors.white.withOpacity(0.9),
             fontSize: 16.0,
           ),
           decoration: InputDecoration(
             hintText: state.widget.hint,
+            filled: true,
+            fillColor: Theme.of(context).brightness == Brightness.light
+                ? Colors.white30
+                : Colors.black38,
             hintStyle: TextStyle(
-              color: Colors.white30,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black38
+                  : Colors.white30,
               fontSize: 16.0,
             ),
             border: InputBorder.none,
