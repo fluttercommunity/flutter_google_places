@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:http/http.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PlacesAutocompleteWidget extends StatefulWidget {
@@ -23,22 +24,38 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final Widget logo;
   final ValueChanged<PlacesAutocompleteResponse> onError;
 
-  PlacesAutocompleteWidget({
-    @required this.apiKey,
-    this.mode = Mode.fullscreen,
-    this.hint = "Search",
-    this.offset,
-    this.location,
-    this.radius,
-    this.language,
-    this.sessionToken,
-    this.types,
-    this.components,
-    this.strictbounds,
-    this.logo,
-    this.onError,
-    Key key,
-  }) : super(key: key);
+  /// optional - sets 'proxy' value in google_maps_webservice
+  ///
+  /// In case of using a proxy the baseUrl can be set.
+  /// The apiKey is not required in case the proxy sets it.
+  /// (Not storing the apiKey in the app is good practice)
+
+  final String proxyBaseUrl;
+
+  /// optional - set 'client' value in google_maps_webservice
+  /// 
+  /// In case of using a proxy url that requires authentication
+  /// or custom configuration
+  final BaseClient httpClient;
+
+  PlacesAutocompleteWidget(
+      {@required this.apiKey,
+      this.mode = Mode.fullscreen,
+      this.hint = "Search",
+      this.offset,
+      this.location,
+      this.radius,
+      this.language,
+      this.sessionToken,
+      this.types,
+      this.components,
+      this.strictbounds,
+      this.logo,
+      this.onError,
+      Key key,
+      this.proxyBaseUrl,
+      this.httpClient})
+      : super(key: key);
 
   @override
   State<PlacesAutocompleteWidget> createState() {
@@ -331,7 +348,11 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     super.initState();
     _queryTextController = TextEditingController(text: "");
 
-    _places = GoogleMapsPlaces(apiKey: widget.apiKey);
+      _places = GoogleMapsPlaces(
+        apiKey: widget.apiKey,
+        baseUrl: widget.proxyBaseUrl,
+        httpClient: widget.httpClient
+      );
     _searching = false;
 
     _queryTextController.addListener(_onQueryChange);
@@ -422,7 +443,9 @@ class PlacesAutocomplete {
       List<Component> components,
       bool strictbounds,
       Widget logo,
-      ValueChanged<PlacesAutocompleteResponse> onError}) {
+      ValueChanged<PlacesAutocompleteResponse> onError,
+      String proxyBaseUrl,
+      Client httpClient}) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
           mode: mode,
@@ -437,6 +460,8 @@ class PlacesAutocomplete {
           hint: hint,
           logo: logo,
           onError: onError,
+          proxyBaseUrl: proxyBaseUrl,
+          httpClient: httpClient
         );
 
     if (mode == Mode.overlay) {
