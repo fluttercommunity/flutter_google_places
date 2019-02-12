@@ -15,6 +15,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final num offset;
   final num radius;
   final String language;
+  final String sessionToken;
   final List<String> types;
   final List<Component> components;
   final bool strictbounds;
@@ -30,6 +31,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.location,
     this.radius,
     this.language,
+    this.sessionToken,
     this.types,
     this.components,
     this.strictbounds,
@@ -234,13 +236,21 @@ class _AppBarPlacesAutoCompleteTextFieldState
           controller: state._queryTextController,
           autofocus: true,
           style: TextStyle(
-            color: Colors.white70,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.9)
+                : Colors.white.withOpacity(0.9),
             fontSize: 16.0,
           ),
           decoration: InputDecoration(
             hintText: state.widget.hint,
+            filled: true,
+            fillColor: Theme.of(context).brightness == Brightness.light
+                ? Colors.white30
+                : Colors.black38,
             hintStyle: TextStyle(
-              color: Colors.white30,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black38
+                  : Colors.white30,
               fontSize: 16.0,
             ),
             border: InputBorder.none,
@@ -343,6 +353,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         location: widget.location,
         radius: widget.radius,
         language: widget.language,
+        sessionToken: widget.sessionToken,
         types: widget.types,
         components: widget.components,
         strictbounds: widget.strictbounds,
@@ -406,6 +417,7 @@ class PlacesAutocomplete {
       Location location,
       num radius,
       String language,
+      String sessionToken,
       List<String> types,
       List<Component> components,
       bool strictbounds,
@@ -415,6 +427,7 @@ class PlacesAutocomplete {
           apiKey: apiKey,
           mode: mode,
           language: language,
+          sessionToken: sessionToken,
           components: components,
           types: types,
           location: location,
