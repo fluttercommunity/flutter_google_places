@@ -29,11 +29,10 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// In case of using a proxy the baseUrl can be set.
   /// The apiKey is not required in case the proxy sets it.
   /// (Not storing the apiKey in the app is good practice)
-
   final String proxyBaseUrl;
 
   /// optional - set 'client' value in google_maps_webservice
-  /// 
+  ///
   /// In case of using a proxy url that requires authentication
   /// or custom configuration
   final BaseClient httpClient;
@@ -348,11 +347,10 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     super.initState();
     _queryTextController = TextEditingController(text: "");
 
-      _places = GoogleMapsPlaces(
+    _places = GoogleMapsPlaces(
         apiKey: widget.apiKey,
         baseUrl: widget.proxyBaseUrl,
-        httpClient: widget.httpClient
-      );
+        httpClient: widget.httpClient);
     _searching = false;
 
     _queryTextController.addListener(_onQueryChange);
@@ -447,22 +445,21 @@ class PlacesAutocomplete {
       String proxyBaseUrl,
       Client httpClient}) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
-          apiKey: apiKey,
-          mode: mode,
-          language: language,
-          sessionToken: sessionToken,
-          components: components,
-          types: types,
-          location: location,
-          radius: radius,
-          strictbounds: strictbounds,
-          offset: offset,
-          hint: hint,
-          logo: logo,
-          onError: onError,
-          proxyBaseUrl: proxyBaseUrl,
-          httpClient: httpClient
-        );
+        apiKey: apiKey,
+        mode: mode,
+        language: language,
+        sessionToken: sessionToken,
+        components: components,
+        types: types,
+        location: location,
+        radius: radius,
+        strictbounds: strictbounds,
+        offset: offset,
+        hint: hint,
+        logo: logo,
+        onError: onError,
+        proxyBaseUrl: proxyBaseUrl,
+        httpClient: httpClient);
 
     if (mode == Mode.overlay) {
       return showDialog(context: context, builder: builder);
