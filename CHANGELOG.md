@@ -1,3 +1,8 @@
+## 0.2.0
+
+- better text theme for text input
+- allow proxyUrl with `proxyBaseUrl` and override http client with `httpClient`
+
 ## 0.1.4
 
 - Rename footer to logo to be less confusing
