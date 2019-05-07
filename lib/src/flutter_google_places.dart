@@ -340,7 +340,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   GoogleMapsPlaces _places;
   bool _searching;
 
-  final _queryBehavior = BehaviorSubject<String>.seeded('');
+  final _queryBehavior = BehaviorSubject<dynamic>.seeded('');
 
   @override
   void initState() {
