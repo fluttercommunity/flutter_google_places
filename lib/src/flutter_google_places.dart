@@ -356,7 +356,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     _queryTextController.addListener(_onQueryChange);
 
     _queryBehavior.stream
-        .debounce(Duration(milliseconds: 300))
+        .debounce((_) => TimerStream(true, const Duration(milliseconds: 300)))
         .listen(doSearch);
   }
 
