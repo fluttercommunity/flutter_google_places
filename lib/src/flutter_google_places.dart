@@ -336,6 +336,7 @@ enum Mode { overlay, fullscreen }
 
 abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   TextEditingController _queryTextController;
+  Timer _debounce;
   PlacesAutocompleteResponse _response;
   GoogleMapsPlaces _places;
   bool _searching;
@@ -346,7 +347,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void initState() {
     super.initState();
     _queryTextController = TextEditingController(text: "");
-
+    _debounce = Timer(const Duration(milliseconds: 300));
     _places = GoogleMapsPlaces(
         apiKey: widget.apiKey,
         baseUrl: widget.proxyBaseUrl,
@@ -356,7 +357,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     _queryTextController.addListener(_onQueryChange);
 
     _queryBehavior.stream
-        .debounce(const Duration(milliseconds: 300))
+        .debounce(_debounce)
         .listen(doSearch);
   }
 
