@@ -347,7 +347,6 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void initState() {
     super.initState();
     _queryTextController = TextEditingController(text: "");
-    _debounce = Timer(const Duration(milliseconds: 300));
     _places = GoogleMapsPlaces(
         apiKey: widget.apiKey,
         baseUrl: widget.proxyBaseUrl,
@@ -357,7 +356,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     _queryTextController.addListener(_onQueryChange);
 
     _queryBehavior.stream
-        .debounce(_debounce)
+        .debounce(Duration(milliseconds: 300))
         .listen(doSearch);
   }
 
