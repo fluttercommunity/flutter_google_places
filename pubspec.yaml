@@ -5,13 +5,13 @@ author: Hadrien Lejard <hadrien.lejard@gmail.com>
 homepage: https://github.com/lejard-h/flutter_google_places
 
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: ">=2.0.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  rxdart: ^0.21.0
-  google_maps_webservice: ^0.0.10
+  rxdart: ^0.22.0
+  google_maps_webservice: ^0.0.14
   http: ">=0.11.0 <1.0.0"
 
 dev_dependencies:
