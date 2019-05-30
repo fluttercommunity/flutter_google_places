@@ -1,3 +1,7 @@
+## 0.2.3
+
+- update rxdart and google_maps_webservice
+
 ## 0.2.0
 
 - better text theme for text input
