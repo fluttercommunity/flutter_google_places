@@ -1,7 +1,7 @@
 library flutter_google_places.src;
 
 import 'dart:async';
-import 'dart:io';
+// import 'dart:io' if () "" ;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -143,9 +143,9 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
             children: _response.predictions
                 .map(
                   (p) => PredictionTile(
-                        prediction: p,
-                        onTap: Navigator.of(context).pop,
-                      ),
+                    prediction: p,
+                    onTap: Navigator.of(context).pop,
+                  ),
                 )
                 .toList(),
           ),
@@ -160,14 +160,13 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           Padding(padding: EdgeInsets.only(top: 48.0), child: body),
         ]));
 
-    if (Platform.isIOS) {
-      return Padding(padding: EdgeInsets.only(top: 8.0), child: container);
-    }
-    return container;
+    // if (Platform.isIOS) {
+    return Padding(padding: EdgeInsets.only(top: 8.0), child: container);
+    // }
+    // return container;
   }
 
-  Icon get _iconBack =>
-      Platform.isIOS ? Icon(Icons.arrow_back_ios) : Icon(Icons.arrow_back);
+  Icon get _iconBack => Icon(Icons.arrow_back);
 
   Widget _textField(BuildContext context) => TextField(
         controller: _queryTextController,
