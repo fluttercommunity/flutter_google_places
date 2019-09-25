@@ -175,6 +175,8 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
     Prediction p = await _showAutocomplete();
 
     if (p == null) return;
+    
+    
 
     setState(() {
       _effectiveController.text = p.description;
