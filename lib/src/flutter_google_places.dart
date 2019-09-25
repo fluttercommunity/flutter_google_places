@@ -20,6 +20,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final List<String> types;
   final List<Component> components;
   final bool strictbounds;
+  final String region;
   final Mode mode;
   final Widget logo;
   final ValueChanged<PlacesAutocompleteResponse> onError;
@@ -49,6 +50,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.types,
       this.components,
       this.strictbounds,
+      this.region,
       this.logo,
       this.onError,
       Key key,
@@ -376,6 +378,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         types: widget.types,
         components: widget.components,
         strictbounds: widget.strictbounds,
+        region: widget.region,
       );
 
       if (res.errorMessage?.isNotEmpty == true ||
@@ -440,6 +443,7 @@ class PlacesAutocomplete {
       List<String> types,
       List<Component> components,
       bool strictbounds,
+      String region,
       Widget logo,
       ValueChanged<PlacesAutocompleteResponse> onError,
       String proxyBaseUrl,
@@ -454,6 +458,7 @@ class PlacesAutocomplete {
         location: location,
         radius: radius,
         strictbounds: strictbounds,
+        region: region,
         offset: offset,
         hint: hint,
         logo: logo,
