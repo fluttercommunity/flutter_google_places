@@ -1,8 +1,6 @@
 library flutter_google_places.src;
 
 import 'dart:async';
-// import 'dart:io' if () "" ;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -160,10 +158,10 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           Padding(padding: EdgeInsets.only(top: 48.0), child: body),
         ]));
 
-    // if (Platform.isIOS) {
+    if ( Theme.of(context).platform == TargetPlatform.iOS) {
     return Padding(padding: EdgeInsets.only(top: 8.0), child: container);
-    // }
-    // return container;
+    }
+    return container;
   }
 
   Icon get _iconBack => Icon(Icons.arrow_back);
@@ -217,6 +215,7 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
     if (state._queryTextController.text.isEmpty ||
         state._response == null ||
         state._response.predictions.isEmpty) {
+          print(state._response.predictions.isEmpty.toString());
       final children = <Widget>[];
       if (state._searching) {
         children.add(_Loader());
