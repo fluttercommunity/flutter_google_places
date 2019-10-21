@@ -158,13 +158,16 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           Padding(padding: EdgeInsets.only(top: 48.0), child: body),
         ]));
 
-    if ( Theme.of(context).platform == TargetPlatform.iOS) {
-    return Padding(padding: EdgeInsets.only(top: 8.0), child: container);
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      return Padding(padding: EdgeInsets.only(top: 8.0), child: container);
     }
     return container;
   }
 
-  Icon get _iconBack => Icon(Icons.arrow_back);
+  Icon get _iconBack => -Theme.of(context).platform == TargetPlatform.iOS
+      ? Icon(Icons.arrow_back_ios): Icon(Icons.arrow_back);
+
+
 
   Widget _textField(BuildContext context) => TextField(
         controller: _queryTextController,
@@ -215,7 +218,6 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
     if (state._queryTextController.text.isEmpty ||
         state._response == null ||
         state._response.predictions.isEmpty) {
-          print(state._response.predictions.isEmpty.toString());
       final children = <Widget>[];
       if (state._searching) {
         children.add(_Loader());
