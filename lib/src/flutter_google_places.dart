@@ -1,7 +1,6 @@
 library flutter_google_places.src;
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +96,9 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                 color: theme.brightness == Brightness.light
                     ? Colors.black45
                     : null,
-                icon: _iconBack,
+                icon: theme.platform == TargetPlatform.iOS 
+                      ? Icon(Icons.arrow_back_ios) 
+                      : Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -160,14 +161,11 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           Padding(padding: EdgeInsets.only(top: 48.0), child: body),
         ]));
 
-    if (Platform.isIOS) {
+    if (theme.platform == TargetPlatform.iOS) {
       return Padding(padding: EdgeInsets.only(top: 8.0), child: container);
     }
     return container;
   }
-
-  Icon get _iconBack =>
-      Platform.isIOS ? Icon(Icons.arrow_back_ios) : Icon(Icons.arrow_back);
 
   Widget _textField(BuildContext context) => TextField(
         controller: _queryTextController,
