@@ -54,6 +54,7 @@ class PlacesAutocompleteField extends StatefulWidget {
     this.components,
     this.strictbounds,
     this.onChanged,
+    this.onSelected,
     this.onError,
     this.inputDecoration = const InputDecoration(),
   }) : super(key: key);
@@ -127,6 +128,9 @@ class PlacesAutocompleteField extends StatefulWidget {
   /// Called when the text being edited changes.
   final ValueChanged<String> onChanged;
 
+  /// Called when an autocomplete entry is selected.
+  final ValueChanged<Prediction> onSelected;
+
   /// Callback when autocomplete has error.
   final ValueChanged<PlacesAutocompleteResponse> onError;
 
@@ -180,6 +184,9 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
       _effectiveController.text = p.description;
       if (widget.onChanged != null) {
         widget.onChanged(p.description);
+      }
+      if (widget.onSelected != null) {
+        widget.onSelected(p);
       }
     });
   }
