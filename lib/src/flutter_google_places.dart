@@ -166,7 +166,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
     return container;
   }
 
-  Icon get _iconBack => -Theme.of(context).platform == TargetPlatform.iOS
+  Icon get _iconBack => Theme.of(context).platform == TargetPlatform.iOS
       ? Icon(Icons.arrow_back_ios): Icon(Icons.arrow_back);
 
 
