@@ -9,6 +9,7 @@ import 'package:rxdart/rxdart.dart';
 
 class PlacesAutocompleteWidget extends StatefulWidget {
   final String apiKey;
+  final String startText;
   final String hint;
   final BorderRadius overlayBorderRadius;
   final Location location;
@@ -55,7 +56,8 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.onError,
       Key key,
       this.proxyBaseUrl,
-      this.httpClient})
+      this.httpClient,
+      this.startText})
       : super(key: key);
 
   @override
@@ -364,7 +366,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   @override
   void initState() {
     super.initState();
-    _queryTextController = TextEditingController(text: "");
+    _queryTextController = TextEditingController(text: widget.startText);
 
     _places = GoogleMapsPlaces(
         apiKey: widget.apiKey,
@@ -465,7 +467,8 @@ class PlacesAutocomplete {
       Widget logo,
       ValueChanged<PlacesAutocompleteResponse> onError,
       String proxyBaseUrl,
-      Client httpClient}) {
+      Client httpClient,
+      String startText=""}) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
         apiKey: apiKey,
         mode: mode,
@@ -483,7 +486,8 @@ class PlacesAutocomplete {
         logo: logo,
         onError: onError,
         proxyBaseUrl: proxyBaseUrl,
-        httpClient: httpClient);
+        httpClient: httpClient,
+        startText: startText,);
 
     if (mode == Mode.overlay) {
       return showDialog(context: context, builder: builder);
