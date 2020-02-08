@@ -10,6 +10,7 @@ import 'package:rxdart/rxdart.dart';
 class PlacesAutocompleteWidget extends StatefulWidget {
   final String apiKey;
   final String hint;
+  final BorderRadius overlayBorderRadius;
   final Location location;
   final num offset;
   final num radius;
@@ -40,6 +41,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       {@required this.apiKey,
       this.mode = Mode.fullscreen,
       this.hint = "Search",
+      this.overlayBorderRadius,
       this.offset,
       this.location,
       this.radius,
@@ -85,11 +87,19 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final headerTopLeftBorderRadius = widget.overlayBorderRadius != null ? 
+      widget.overlayBorderRadius.topLeft : Radius.circular(2);
+
+    final headerTopRightBorderRadius = widget.overlayBorderRadius != null ? 
+      widget.overlayBorderRadius.topRight : Radius.circular(2);
+
     final header = Column(children: <Widget>[
       Material(
           color: theme.dialogBackgroundColor,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(2.0), topRight: Radius.circular(2.0)),
+            topLeft: headerTopLeftBorderRadius,
+            topRight: headerTopRightBorderRadius
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -116,6 +126,12 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
 
     var body;
 
+    final bodyBottomLeftBorderRadius = widget.overlayBorderRadius != null ? 
+      widget.overlayBorderRadius.bottomLeft : Radius.circular(2);
+
+    final bodyBottomRightBorderRadius = widget.overlayBorderRadius != null ? 
+      widget.overlayBorderRadius.bottomRight : Radius.circular(2);
+
     if (_searching) {
       body = Stack(
         children: <Widget>[_Loader()],
@@ -128,15 +144,16 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
         color: theme.dialogBackgroundColor,
         child: widget.logo ?? PoweredByGoogleImage(),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(2.0),
-            bottomRight: Radius.circular(2.0)),
+          bottomLeft: bodyBottomLeftBorderRadius,
+          bottomRight: bodyBottomRightBorderRadius,
+        ),
       );
     } else {
       body = SingleChildScrollView(
         child: Material(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(2.0),
-            bottomRight: Radius.circular(2.0),
+            bottomLeft: bodyBottomLeftBorderRadius,
+            bottomRight: bodyBottomRightBorderRadius,
           ),
           color: theme.dialogBackgroundColor,
           child: ListBody(
@@ -435,6 +452,7 @@ class PlacesAutocomplete {
       @required String apiKey,
       Mode mode = Mode.fullscreen,
       String hint = "Search",
+      BorderRadius overlayBorderRadius,
       num offset,
       Location location,
       num radius,
@@ -451,6 +469,7 @@ class PlacesAutocomplete {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
         apiKey: apiKey,
         mode: mode,
+        overlayBorderRadius: overlayBorderRadius,
         language: language,
         sessionToken: sessionToken,
         components: components,
