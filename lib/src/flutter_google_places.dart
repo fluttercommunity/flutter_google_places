@@ -24,6 +24,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final Mode mode;
   final Widget logo;
   final ValueChanged<PlacesAutocompleteResponse> onError;
+  final int debounce;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -57,7 +58,8 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       Key key,
       this.proxyBaseUrl,
       this.httpClient,
-      this.startText})
+      this.startText,
+      this.debounce = 300})
       : super(key: key);
 
   @override
@@ -126,7 +128,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           )
     ]);
 
-    var body;
+    Widget body;
 
     final bodyBottomLeftBorderRadius = widget.overlayBorderRadius != null ? 
       widget.overlayBorderRadius.bottomLeft : Radius.circular(2);
@@ -360,6 +362,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   PlacesAutocompleteResponse _response;
   GoogleMapsPlaces _places;
   bool _searching;
+  Timer _debounce;
 
   final _queryBehavior = BehaviorSubject<String>.seeded('');
 
@@ -376,9 +379,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
     _queryTextController.addListener(_onQueryChange);
 
-    _queryBehavior.stream
-        .debounceTime(const Duration(milliseconds: 300))
-        .listen(doSearch);
+    _queryBehavior.stream.listen(doSearch);
   }
 
   Future<Null> doSearch(String value) async {
@@ -412,7 +413,10 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   }
 
   void _onQueryChange() {
-    _queryBehavior.add(_queryTextController.text);
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(Duration(milliseconds: widget.debounce), () {
+      _queryBehavior.add(_queryTextController.text);
+    });
   }
 
   @override
