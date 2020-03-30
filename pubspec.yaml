@@ -14,6 +14,8 @@ dependencies:
   rxdart: ^0.23.1
   google_maps_webservice: ^0.0.15
   http: ">=0.11.0 <1.0.0"
+  geocoder: ^0.2.1
+
 
 dev_dependencies:
   flutter_test:

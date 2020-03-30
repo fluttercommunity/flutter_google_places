@@ -3,9 +3,15 @@ library flutter_google_places.src;
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart';
 import 'package:rxdart/rxdart.dart';
+
+
+
+
+var globalEnableZipCode = false;
 
 class PlacesAutocompleteWidget extends StatefulWidget {
   final String apiKey;
@@ -38,6 +44,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// In case of using a proxy url that requires authentication
   /// or custom configuration
   final BaseClient httpClient;
+
 
   PlacesAutocompleteWidget(
       {@required this.apiKey,
@@ -91,19 +98,20 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final headerTopLeftBorderRadius = widget.overlayBorderRadius != null ? 
-      widget.overlayBorderRadius.topLeft : Radius.circular(2);
+    final headerTopLeftBorderRadius = widget.overlayBorderRadius != null
+        ? widget.overlayBorderRadius.topLeft
+        : Radius.circular(2);
 
-    final headerTopRightBorderRadius = widget.overlayBorderRadius != null ? 
-      widget.overlayBorderRadius.topRight : Radius.circular(2);
+    final headerTopRightBorderRadius = widget.overlayBorderRadius != null
+        ? widget.overlayBorderRadius.topRight
+        : Radius.circular(2);
 
     final header = Column(children: <Widget>[
       Material(
           color: theme.dialogBackgroundColor,
           borderRadius: BorderRadius.only(
-            topLeft: headerTopLeftBorderRadius,
-            topRight: headerTopRightBorderRadius
-          ),
+              topLeft: headerTopLeftBorderRadius,
+              topRight: headerTopRightBorderRadius),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -130,11 +138,13 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
 
     Widget body;
 
-    final bodyBottomLeftBorderRadius = widget.overlayBorderRadius != null ? 
-      widget.overlayBorderRadius.bottomLeft : Radius.circular(2);
+    final bodyBottomLeftBorderRadius = widget.overlayBorderRadius != null
+        ? widget.overlayBorderRadius.bottomLeft
+        : Radius.circular(2);
 
-    final bodyBottomRightBorderRadius = widget.overlayBorderRadius != null ? 
-      widget.overlayBorderRadius.bottomRight : Radius.circular(2);
+    final bodyBottomRightBorderRadius = widget.overlayBorderRadius != null
+        ? widget.overlayBorderRadius.bottomRight
+        : Radius.circular(2);
 
     if (_searching) {
       body = Stack(
@@ -188,9 +198,8 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   }
 
   Icon get _iconBack => Theme.of(context).platform == TargetPlatform.iOS
-      ? Icon(Icons.arrow_back_ios): Icon(Icons.arrow_back);
-
-
+      ? Icon(Icons.arrow_back_ios)
+      : Icon(Icons.arrow_back);
 
   Widget _textField(BuildContext context) => TextField(
         controller: _queryTextController,
@@ -338,20 +347,43 @@ class PredictionsListView extends StatelessWidget {
 class PredictionTile extends StatelessWidget {
   final Prediction prediction;
   final ValueChanged<Prediction> onTap;
+  final enableZipCode;
 
-  PredictionTile({@required this.prediction, this.onTap});
+  PredictionTile({@required this.prediction, this.onTap, this.enableZipCode});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.location_on),
       title: Text(prediction.description),
+      subtitle: (globalEnableZipCode)? FutureBuilder<String>(
+          future: getZipCode(prediction.description),
+          builder: (context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            if (snapshot.data == null) {
+              return Text("");
+            }
+            return Text("${snapshot.data}");
+          }): SizedBox(height: 0,),
       onTap: () {
         if (onTap != null) {
           onTap(prediction);
         }
       },
     );
+  }
+
+  Future<String> getZipCode(String description) async {
+    final query = description;
+    var addresses = await Geocoder.local.findAddressesFromQuery(query);
+    var first = addresses.first;
+    print("${first.featureName} : ${first.coordinates}");
+    return first.postalCode;
   }
 }
 
@@ -415,7 +447,9 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void _onQueryChange() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(Duration(milliseconds: widget.debounce), () {
-      _queryBehavior.add(_queryTextController.text);
+      if(!_queryBehavior.isClosed){
+        _queryBehavior.add(_queryTextController.text);
+      }
     });
   }
 
@@ -472,26 +506,30 @@ class PlacesAutocomplete {
       ValueChanged<PlacesAutocompleteResponse> onError,
       String proxyBaseUrl,
       Client httpClient,
-      String startText=""}) {
+        enabelZipCode : false,
+      String startText = ""}) {
+
+    globalEnableZipCode = enabelZipCode;
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
-        apiKey: apiKey,
-        mode: mode,
-        overlayBorderRadius: overlayBorderRadius,
-        language: language,
-        sessionToken: sessionToken,
-        components: components,
-        types: types,
-        location: location,
-        radius: radius,
-        strictbounds: strictbounds,
-        region: region,
-        offset: offset,
-        hint: hint,
-        logo: logo,
-        onError: onError,
-        proxyBaseUrl: proxyBaseUrl,
-        httpClient: httpClient,
-        startText: startText,);
+          apiKey: apiKey,
+          mode: mode,
+          overlayBorderRadius: overlayBorderRadius,
+          language: language,
+          sessionToken: sessionToken,
+          components: components,
+          types: types,
+          location: location,
+          radius: radius,
+          strictbounds: strictbounds,
+          region: region,
+          offset: offset,
+          hint: hint,
+          logo: logo,
+          onError: onError,
+          proxyBaseUrl: proxyBaseUrl,
+          httpClient: httpClient,
+          startText: startText,
+        );
 
     if (mode == Mode.overlay) {
       return showDialog(context: context, builder: builder);

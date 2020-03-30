@@ -5,7 +5,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-const kGoogleApiKey = "API_KEY";
+const kGoogleApiKey = "AIzaSyD2hIWbksN1_QucfircwEyXUMqJfKZgw5w";
 
 // to get places detail (lat/lng)
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
@@ -111,6 +111,8 @@ class _MyAppState extends State<MyApp> {
       context: context,
       apiKey: kGoogleApiKey,
       onError: onError,
+      enabelZipCode: true
+      ,
       mode: _mode,
       language: "fr",
       components: [Component(Component.country, "fr")],
