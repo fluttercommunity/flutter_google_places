@@ -231,6 +231,7 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
     if (widget.inputDecoration != null) {
       child = InputDecorator(
         decoration: widget.inputDecoration,
+        isEmpty: controller.value.text.isEmpty,
         child: child,
       );
     }
