@@ -1,3 +1,8 @@
+## 0.2.5
+
+- Updates rxdart to 0.24.0
+- Updates google_maps_webservice to 0.0.16
+
 ## 0.2.4
 
 - Added support for flutter web
