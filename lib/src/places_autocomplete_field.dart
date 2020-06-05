@@ -153,6 +153,9 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
   @override
   void didUpdateWidget(PlacesAutocompleteField oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.controller != null) {
+      widget.controller.text = oldWidget.controller.text;
+    }
     if (widget.controller == null && oldWidget.controller != null)
       _controller = TextEditingController.fromValue(oldWidget.controller.value);
     else if (widget.controller != null && oldWidget.controller == null)
