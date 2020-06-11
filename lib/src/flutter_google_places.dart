@@ -256,13 +256,19 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
 }
 
 class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
+
+  final InputDecoration textDecoration;
+  final TextStyle textStyle;
+
+  AppBarPlacesAutoCompleteTextField({Key key, this.textDecoration, this.textStyle}): super(key: key);
+
   @override
-  _AppBarPlacesAutoCompleteTextFieldState createState() =>
-      _AppBarPlacesAutoCompleteTextFieldState();
+  _AppBarPlacesAutoCompleteTextFieldState createState() => _AppBarPlacesAutoCompleteTextFieldState();
 }
 
 class _AppBarPlacesAutoCompleteTextFieldState
     extends State<AppBarPlacesAutoCompleteTextField> {
+
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context);
@@ -274,28 +280,37 @@ class _AppBarPlacesAutoCompleteTextFieldState
         child: TextField(
           controller: state._queryTextController,
           autofocus: true,
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black.withOpacity(0.9)
-                : Colors.white.withOpacity(0.9),
-            fontSize: 16.0,
-          ),
-          decoration: InputDecoration(
-            hintText: state.widget.hint,
-            filled: true,
-            fillColor: Theme.of(context).brightness == Brightness.light
-                ? Colors.white30
-                : Colors.black38,
-            hintStyle: TextStyle(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black38
-                  : Colors.white30,
-              fontSize: 16.0,
-            ),
-            border: InputBorder.none,
-          ),
+          style: widget.textStyle ?? _defaultStyle(),
+          decoration: widget.textDecoration ?? _defaultDecoration(state.widget.hint),
         ));
   }
+
+  InputDecoration _defaultDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      filled: true,
+      fillColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.white30
+          : Colors.black38,
+      hintStyle: TextStyle(
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.black38
+            : Colors.white30,
+        fontSize: 16.0,
+      ),
+      border: InputBorder.none,
+    );
+  }
+
+  TextStyle _defaultStyle() {
+    return TextStyle(
+      color: Theme.of(context).brightness == Brightness.light
+          ? Colors.black.withOpacity(0.9)
+          : Colors.white.withOpacity(0.9),
+      fontSize: 16.0,
+    );
+  }
+
 }
 
 class PoweredByGoogleImage extends StatelessWidget {
@@ -415,7 +430,9 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void _onQueryChange() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(Duration(milliseconds: widget.debounce), () {
-      _queryBehavior.add(_queryTextController.text);
+      if(!_queryBehavior.isClosed) {
+        _queryBehavior.add(_queryTextController.text);
+      }
     });
   }
 
