@@ -12,7 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
   rxdart: ^0.24.0
-  google_maps_webservice: ^0.0.16
+  google_maps_webservice:
+    git:
+      url: https://github.com/zeshuaro/google_maps_webservice.git
+      ref: feature/restricted-api-keys
   http: ">=0.11.0 <1.0.0"
 
 dev_dependencies:
