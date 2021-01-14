@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   rxdart: ^0.25.0
   google_maps_webservice: ^0.0.19
-  http: ">=0.12.2"
+  http: ">=0.12.2 <1.0.0"
 
 dev_dependencies:
   flutter_test:
