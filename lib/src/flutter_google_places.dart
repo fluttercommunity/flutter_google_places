@@ -71,7 +71,11 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   }
 
   static PlacesAutocompleteState of(BuildContext context) =>
-      context.ancestorStateOfType(const TypeMatcher<PlacesAutocompleteState>());
+      
+      //context.ancestorStateOfType(const TypeMatcher<PlacesAutocompleteState>());// it is deprecated and should be as follows  to compile on latest flutter
+      context.findAncestorStateOfType<PlacesAutocompleteState>();
+
+  
 }
 
 class _PlacesAutocompleteScaffoldState extends PlacesAutocompleteState {
