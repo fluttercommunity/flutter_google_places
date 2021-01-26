@@ -405,7 +405,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   GoogleMapsPlaces _places;
 
   Stream<SearchState> state$;
-  SearchState state;
+  var state = SearchState(false, null, '');
   StreamSubscription<SearchState> subscription;
 
   @override
