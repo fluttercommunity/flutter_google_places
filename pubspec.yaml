@@ -7,15 +7,17 @@ homepage: https://github.com/lejard-h/flutter_google_places
 maintainer: Kev Morelli (@KevMorelli)
 
 environment:
-  sdk: ">=2.0.0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   google_api_headers: ">=0.1.0 <1.0.0"
   google_maps_webservice: ^0.0.19
-  http: ">=0.11.0 <1.0.0"
-  rxdart: ^0.24.0
+  http: ^0.12.2
+  rxdart: ^0.26.0-nullsafety.1
+  listenable_stream: ^1.0.0-nullsafety.1
+  collection: ^1.15.0-nullsafety.5
 
 dev_dependencies:
   flutter_test:
