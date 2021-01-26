@@ -439,6 +439,8 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   Stream<SearchState> doSearch(String value) async* {
     yield SearchState(true, null, value);
 
+    debugPrint(
+        '[flutter_google_places] input=$value location=${widget.location} origin=${widget.origin}');
     final res = await _places.autocomplete(
       value,
       offset: widget.offset,
@@ -458,12 +460,15 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
       onResponseError(res);
     }
 
+    final sorted = res.predictions.sortedBy<num>((e) => e.distanceMeters ?? 0);
+    debugPrint(
+        '[flutter_google_places] sorted=${sorted.map((e) => e.distanceMeters).toList(growable: false)}');
     yield SearchState(
       false,
       PlacesAutocompleteResponse(
         res.status,
         res.errorMessage,
-        res.predictions.sortedBy<num>((e) => e.distanceMeters ?? 0),
+        sorted,
       ),
       value,
     );
@@ -517,6 +522,7 @@ class PlacesAutocomplete {
     Client httpClient,
     String startText = "",
     Duration debounce,
+    Location origin,
   }) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
@@ -538,6 +544,7 @@ class PlacesAutocomplete {
           httpClient: httpClient,
           startText: startText,
           debounce: debounce,
+          origin: origin,
         );
 
     if (mode == Mode.overlay) {
