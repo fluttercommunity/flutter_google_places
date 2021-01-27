@@ -1,5 +1,17 @@
 [![Flutter Community: flutter_google_places](https://fluttercommunity.dev/_github/header/flutter_google_places)](https://github.com/fluttercommunity/community)
 
+## Updated by [@zeshuaro](https://github.com/zeshuaro) and [@hoc081098](https://github.com/hoc081098)
+
+- Add to support restricted API keys.
+- Refactoring by using RxDart for more power.
+
+```yaml
+flutter_google_places:
+  git:
+    url: https://github.com/hoc081098/flutter_google_places.git
+    ref: feature/restricted-api-keys
+```
+
 # flutter_google_places
 <p align="left">
   <a href="https://pub.dartlang.org/packages/flutter_google_places"><img alt="pub version" src="https://img.shields.io/pub/v/flutter_google_places.svg?style=flat-square"></a>
