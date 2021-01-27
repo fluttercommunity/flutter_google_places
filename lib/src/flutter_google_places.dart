@@ -429,8 +429,11 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
   Future<void> _initPlaces() async {
     final headers = await GoogleApiHeaders().getHeaders();
-    debugPrint('[flutter_google_places] headers');
+    debugPrint('[flutter_google_places] headers=$headers');
 
+    if (!mounted) {
+      return;
+    }
     _places = GoogleMapsPlaces(
       apiKey: widget.apiKey,
       baseUrl: widget.proxyBaseUrl,
