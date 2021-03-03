@@ -9,7 +9,7 @@
 flutter_google_places:
   git:
     url: https://github.com/hoc081098/flutter_google_places.git
-    ref: feature/restricted-api-keys
+    ref: 00159b26b6ccc58792b7273b8e637fefb46d1988
 ```
 
 # flutter_google_places
