@@ -62,11 +62,11 @@ class _MyAppState extends State<MyApp> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _buildDropdownMenu(),
-          RaisedButton(
+          ElevatedButton(
             onPressed: _handlePressButton,
             child: Text("Search places"),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text("Custom"),
             onPressed: () {
               Navigator.of(context).pushNamed("/search");
