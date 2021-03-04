@@ -1,3 +1,10 @@
+## 0.2.8
+
+- Fix pub.dev complaints
+  - Remove unsecure links
+  - Replace deprecated `autovalidate` bool with `AutovalidateMode`
+  - Formated with dartfmt
+
 ## 0.2.7
 
 - Add expected label behaviour to PlacesAutocompleteField (PR #108)
