@@ -1,23 +1,25 @@
 name: example
 description: A new Flutter project.
 
+environment:
+  sdk: ">=2.0.0 <3.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
+  flutter_google_places:
+    path: ../
+  google_api_headers: ^0.1.1+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_google_places:
-    path: ../
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the Icons class.

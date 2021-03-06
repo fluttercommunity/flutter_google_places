@@ -182,7 +182,7 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
     Prediction p = await _showAutocomplete();
 
     if (p == null) return;
-    
+
     setState(() {
       _effectiveController.text = p.description;
       if (widget.onChanged != null) {
@@ -234,6 +234,7 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
     if (widget.inputDecoration != null) {
       child = InputDecorator(
         decoration: widget.inputDecoration,
+        isEmpty: controller.value.text.isEmpty,
         child: child,
       );
     }

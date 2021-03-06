@@ -1,3 +1,24 @@
+## 0.2.8
+
+- Fix pub.dev complaints
+  - Remove unsecure links
+  - Replace deprecated `autovalidate` bool with `AutovalidateMode`
+  - Formated with dartfmt
+
+## 0.2.7
+
+- Add expected label behaviour to PlacesAutocompleteField (PR #108)
+- Auto select text (PR #109)
+- Add to support app restricted API keys (PR #136)
+- Replaced deprecated `ancestorStateOfType` method (PR #141)
+- Updating rxdart version in pubspec.yaml (PR #143)
+
+## 0.2.6
+
+- Fix error on select place
+- Fix bug where `controller.text` is not properly updated
+- Fix issue when close the widget and "_queryBehavior" is trying to add text
+
 ## 0.2.5
 
 - Updates rxdart to 0.24.0

@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:google_api_headers/google_api_headers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 
 const kGoogleApiKey = "API_KEY";
-
-// to get places detail (lat/lng)
-GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 main() {
   runApp(RoutesWidget());
@@ -64,11 +62,11 @@ class _MyAppState extends State<MyApp> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _buildDropdownMenu(),
-          RaisedButton(
+          ElevatedButton(
             onPressed: _handlePressButton,
             child: Text("Search places"),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text("Custom"),
             onPressed: () {
               Navigator.of(context).pushNamed("/search");
@@ -132,6 +130,10 @@ class _MyAppState extends State<MyApp> {
 Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
   if (p != null) {
     // get detail (lat/lng)
+    GoogleMapsPlaces _places = GoogleMapsPlaces(
+      apiKey: kGoogleApiKey,
+      apiHeaders: await GoogleApiHeaders().getHeaders(),
+    );
     PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
     final lat = detail.result.geometry.location.lat;
     final lng = detail.result.geometry.location.lng;

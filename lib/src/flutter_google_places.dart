@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart';
 import 'package:rxdart/rxdart.dart';
@@ -395,12 +396,14 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   @override
   void initState() {
     super.initState();
-    _queryTextController = TextEditingController(text: widget.startText);
 
-    _places = GoogleMapsPlaces(
-        apiKey: widget.apiKey,
-        baseUrl: widget.proxyBaseUrl,
-        httpClient: widget.httpClient);
+    _queryTextController = TextEditingController(text: widget.startText);
+    _queryTextController.selection = new TextSelection(
+      baseOffset: 0,
+      extentOffset: widget.startText?.length ?? 0,
+    );
+
+    _initPlaces();
     _searching = false;
 
     _queryTextController.addListener(_onQueryChange);
@@ -408,8 +411,17 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     _queryBehavior.stream.listen(doSearch);
   }
 
+  Future<void> _initPlaces() async {
+    _places = GoogleMapsPlaces(
+      apiKey: widget.apiKey,
+      baseUrl: widget.proxyBaseUrl,
+      httpClient: widget.httpClient,
+      apiHeaders: await GoogleApiHeaders().getHeaders(),
+    );
+  }
+
   Future<Null> doSearch(String value) async {
-    if (mounted && value.isNotEmpty) {
+    if (mounted && value.isNotEmpty && _places != null) {
       setState(() {
         _searching = true;
       });

@@ -20,7 +20,7 @@ Google places autocomplete widgets for flutter.
 
 ## Getting Started
 
-For help getting started with Flutter, view our online [documentation](http://flutter.io/).
+For help getting started with Flutter, view our online [documentation](https://flutter.dev/).
 
 ```yaml
 # pubspec.yaml
