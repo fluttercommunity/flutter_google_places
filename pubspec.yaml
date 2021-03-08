@@ -12,8 +12,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_api_headers: ^0.2.0-nullsafety.0
-  google_maps_webservice: ^0.0.19
+  google_api_headers: ^0.2.0-nullsafety.1
+  google_maps_webservice:
+    git:
+      url: https://github.com/Flutter-Dart-Open-Source/google_maps_webservice.git
+      ref: 98dc0bd451abb041a17f3efd254d5b983cbdb923
   http: ^0.13.0
   rxdart: ^0.26.0
   listenable_stream: ^1.0.0-nullsafety.1
