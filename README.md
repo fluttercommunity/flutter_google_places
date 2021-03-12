@@ -9,7 +9,7 @@
 flutter_google_places:
   git:
     url: https://github.com/hoc081098/flutter_google_places.git
-    ref: 36e21d6ad0c83a188d9881e4eef50c7b40579933
+    ref: 762ee42d6fa2c1d37a1456a9ce7116ef6a23cdbd
 ```
 
 # flutter_google_places
