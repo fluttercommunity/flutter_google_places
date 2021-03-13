@@ -47,7 +47,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   PlacesAutocompleteWidget(
       {@required this.apiKey,
       this.mode = Mode.fullscreen,
-      this.hint = "Search",
+      this.hint = 'Search',
       this.overlayBorderRadius,
       this.offset,
       this.location,
@@ -125,8 +125,8 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               ),
               Expanded(
                 child: Padding(
-                  child: _textField(context),
                   padding: const EdgeInsets.only(right: 8.0),
+                  child: _textField(context),
                 ),
               ),
             ],
@@ -157,19 +157,19 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
 
                 if (state.isSearching) {
                   return Stack(
-                    children: <Widget>[_Loader()],
                     alignment: FractionalOffset.bottomCenter,
+                    children: <Widget>[_Loader()],
                   );
                 } else if (state.text.isEmpty ||
                     state.response == null ||
                     state.response.predictions.isEmpty) {
                   return Material(
                     color: theme.dialogBackgroundColor,
-                    child: widget.logo ?? const PoweredByGoogleImage(),
                     borderRadius: BorderRadius.only(
                       bottomLeft: bodyBottomLeftBorderRadius,
                       bottomRight: bodyBottomRightBorderRadius,
                     ),
+                    child: widget.logo ?? const PoweredByGoogleImage(),
                   );
                 } else {
                   return SingleChildScrollView(
@@ -336,9 +336,9 @@ class _AppBarPlacesAutoCompleteTextFieldState
 
 class PoweredByGoogleImage extends StatelessWidget {
   final _poweredByGoogleWhite =
-      "packages/flutter_google_places/assets/google_white.png";
+      'packages/flutter_google_places/assets/google_white.png';
   final _poweredByGoogleBlack =
-      "packages/flutter_google_places/assets/google_black.png";
+      'packages/flutter_google_places/assets/google_black.png';
 
   const PoweredByGoogleImage({Key key}) : super(key: key);
 
@@ -461,7 +461,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     );
 
     if (res.errorMessage?.isNotEmpty == true ||
-        res.status == "REQUEST_DENIED") {
+        res.status == 'REQUEST_DENIED') {
       onResponseError(res);
     }
 
@@ -510,7 +510,7 @@ class PlacesAutocomplete {
       {@required BuildContext context,
       @required String apiKey,
       Mode mode = Mode.fullscreen,
-      String hint = "Search",
+      String hint = 'Search',
       BorderRadius overlayBorderRadius,
       num offset,
       Location location,
@@ -525,7 +525,7 @@ class PlacesAutocomplete {
       ValueChanged<PlacesAutocompleteResponse> onError,
       String proxyBaseUrl,
       Client httpClient,
-      String startText = "",
+      String startText = '',
       Duration debounce,
       Location origin}) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(

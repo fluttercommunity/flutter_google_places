@@ -41,7 +41,7 @@ class PlacesAutocompleteField extends StatefulWidget {
     @required this.apiKey,
     this.controller,
     this.leading,
-    this.hint = "Search",
+    this.hint = 'Search',
     this.trailing,
     this.trailingOnTap,
     this.mode = Mode.fullscreen,
@@ -141,6 +141,7 @@ class PlacesAutocompleteField extends StatefulWidget {
 
 class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
   TextEditingController _controller;
+
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller;
 
@@ -156,10 +157,11 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
     if (widget.controller != null) {
       widget.controller.text = oldWidget.controller.text;
     }
-    if (widget.controller == null && oldWidget.controller != null)
+    if (widget.controller == null && oldWidget.controller != null) {
       _controller = TextEditingController.fromValue(oldWidget.controller.value);
-    else if (widget.controller != null && oldWidget.controller == null)
+    } else if (widget.controller != null && oldWidget.controller == null) {
       _controller = null;
+    }
   }
 
   Future<Prediction> _showAutocomplete() async => PlacesAutocomplete.show(
@@ -179,10 +181,10 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
       );
 
   void _handleTap() async {
-    Prediction p = await _showAutocomplete();
+    final p = await _showAutocomplete();
 
     if (p == null) return;
-    
+
     setState(() {
       _effectiveController.text = p.description;
       if (widget.onChanged != null) {
@@ -196,9 +198,9 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = _effectiveController;
+    final controller = _effectiveController;
 
-    var text = controller.text.isNotEmpty
+    final text = controller.text.isNotEmpty
         ? Text(
             controller.text,
             softWrap: true,

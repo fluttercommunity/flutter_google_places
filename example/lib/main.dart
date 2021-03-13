@@ -6,11 +6,9 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart';
 
-const kGoogleApiKey = "API_KEY";
+const kGoogleApiKey = 'API_KEY';
 
-main() {
-  runApp(RoutesWidget());
-}
+void main() => runApp(RoutesWidget());
 
 final customTheme = ThemeData(
   primarySwatch: Colors.blue,
@@ -31,11 +29,11 @@ class RoutesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "My App",
+      title: 'My App',
       theme: customTheme,
       routes: {
-        "/": (_) => MyApp(),
-        "/search": (_) => CustomSearchScaffold(),
+        '/': (_) => MyApp(),
+        '/search': (_) => CustomSearchScaffold(),
       },
     );
   }
@@ -57,46 +55,47 @@ class _MyAppState extends State<MyApp> {
     return Scaffold(
       key: homeScaffoldKey,
       appBar: AppBar(
-        title: Text("My App"),
+        title: Text('My App'),
       ),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _buildDropdownMenu(),
-          ElevatedButton(
-            onPressed: _handlePressButton,
-            child: Text("Search places"),
-          ),
-          ElevatedButton(
-            child: Text("Custom"),
-            onPressed: () {
-              Navigator.of(context).pushNamed("/search");
-            },
-          ),
-        ],
-      )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildDropdownMenu(),
+            ElevatedButton(
+              onPressed: _handlePressButton,
+              child: Text('Search places'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/search');
+              },
+              child: Text('Custom'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildDropdownMenu() => DropdownButton(
-        value: _mode,
-        items: <DropdownMenuItem<Mode>>[
-          DropdownMenuItem<Mode>(
-            child: Text("Overlay"),
-            value: Mode.overlay,
-          ),
-          DropdownMenuItem<Mode>(
-            child: Text("Fullscreen"),
-            value: Mode.fullscreen,
-          ),
-        ],
-        onChanged: (m) {
-          setState(() {
-            _mode = m;
-          });
-        },
-      );
+  Widget _buildDropdownMenu() {
+    return DropdownButton(
+      value: _mode,
+      items: <DropdownMenuItem<Mode>>[
+        DropdownMenuItem<Mode>(
+          value: Mode.overlay,
+          child: Text('Overlay'),
+        ),
+        DropdownMenuItem<Mode>(
+          value: Mode.fullscreen,
+          child: Text('Fullscreen'),
+        ),
+      ],
+      onChanged: (m) {
+        setState(() => _mode = m);
+      },
+    );
+  }
 
   void onError(PlacesAutocompleteResponse response) {
     homeScaffoldKey.currentState.showSnackBar(
@@ -107,32 +106,32 @@ class _MyAppState extends State<MyApp> {
   Future<void> _handlePressButton() async {
     // show input autocomplete with selected mode
     // then get the Prediction selected
-    Prediction p = await PlacesAutocomplete.show(
+    final p = await PlacesAutocomplete.show(
       context: context,
       apiKey: kGoogleApiKey,
       onError: onError,
       mode: _mode,
-      language: "fr",
-      components: [Component(Component.country, "fr")],
+      language: 'fr',
+      components: [Component(Component.country, 'fr')],
     );
 
-    displayPrediction(p, homeScaffoldKey.currentState);
+    await displayPrediction(p, homeScaffoldKey.currentState);
   }
 }
 
 Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
   if (p != null) {
     // get detail (lat/lng)
-    GoogleMapsPlaces _places = GoogleMapsPlaces(
+    final _places = GoogleMapsPlaces(
       apiKey: kGoogleApiKey,
       apiHeaders: await GoogleApiHeaders().getHeaders(),
     );
-    PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
+    final detail = await _places.getDetailsByPlaceId(p.placeId);
     final lat = detail.result.geometry.location.lat;
     final lng = detail.result.geometry.location.lng;
 
     scaffold.showSnackBar(
-      SnackBar(content: Text("${p.description} - $lat/$lng")),
+      SnackBar(content: Text('${p.description} - $lat/$lng')),
     );
   }
 }
@@ -145,8 +144,8 @@ class CustomSearchScaffold extends PlacesAutocompleteWidget {
       : super(
           apiKey: kGoogleApiKey,
           sessionToken: Uuid().generateV4(),
-          language: "en",
-          components: [Component(Component.country, "uk")],
+          language: 'en',
+          components: [Component(Component.country, 'uk')],
         );
 
   @override
@@ -162,8 +161,8 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
         displayPrediction(p, searchScaffoldKey.currentState);
       },
       logo: Row(
-        children: [FlutterLogo()],
         mainAxisAlignment: MainAxisAlignment.center,
+        children: [FlutterLogo()],
       ),
     );
     return Scaffold(key: searchScaffoldKey, appBar: appBar, body: body);
@@ -182,7 +181,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
     super.onResponse(response);
     if (response != null && response.predictions.isNotEmpty) {
       searchScaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text("Got answer")),
+        SnackBar(content: Text('Got answer')),
       );
     }
   }
@@ -193,7 +192,7 @@ class Uuid {
 
   String generateV4() {
     // Generate xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx / 8-4-4-4-12.
-    final int special = 8 + _random.nextInt(4);
+    final special = 8 + _random.nextInt(4);
 
     return '${_bitsDigits(16, 4)}${_bitsDigits(16, 4)}-'
         '${_bitsDigits(16, 4)}-'
