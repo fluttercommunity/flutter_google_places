@@ -1,6 +1,6 @@
 [![Flutter Community: flutter_google_places](https://fluttercommunity.dev/_github/header/flutter_google_places)](https://github.com/fluttercommunity/community)
 
-## Updated by [@zeshuaro](https://github.com/zeshuaro) and [@hoc081098](https://github.com/hoc081098)
+## Updated by [@hoc081098](https://github.com/hoc081098)
 
 - Add to support restricted API keys.
 - Refactoring by using RxDart for more power.
@@ -32,7 +32,7 @@ Google places autocomplete widgets for flutter.
 
 ## Getting Started
 
-For help getting started with Flutter, view our online [documentation](http://flutter.io/).
+For help getting started with Flutter, view our online [documentation](https://flutter.dev/).
 
 ```yaml
 # pubspec.yaml

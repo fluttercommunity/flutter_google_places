@@ -62,7 +62,7 @@ class PlacesAutocompleteFormField extends FormField<String> {
     bool strictbounds,
     ValueChanged<PlacesAutocompleteResponse> onError,
     InputDecoration inputDecoration = const InputDecoration(),
-    AutovalidateMode autovalidateMode,
+    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
     FormFieldSetter<String> onSaved,
     FormFieldValidator<String> validator,
   })  : assert(initialValue == null || controller == null),
