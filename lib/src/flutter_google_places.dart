@@ -44,29 +44,29 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// or custom configuration
   final BaseClient httpClient;
 
-  PlacesAutocompleteWidget({
-    @required this.apiKey,
-    this.mode = Mode.fullscreen,
-    this.hint = "Search",
-    this.overlayBorderRadius,
-    this.offset,
-    this.location,
-    this.origin,
-    this.radius,
-    this.language,
-    this.sessionToken,
-    this.types,
-    this.components,
-    this.strictbounds,
-    this.region,
-    this.logo,
-    this.onError,
-    Key key,
-    this.proxyBaseUrl,
-    this.httpClient,
-    this.startText,
-    this.debounce,
-  }) : super(key: key);
+  PlacesAutocompleteWidget(
+      {@required this.apiKey,
+      this.mode = Mode.fullscreen,
+      this.hint = "Search",
+      this.overlayBorderRadius,
+      this.offset,
+      this.location,
+      this.origin,
+      this.radius,
+      this.language,
+      this.sessionToken,
+      this.types,
+      this.components,
+      this.strictbounds,
+      this.region,
+      this.logo,
+      this.onError,
+      Key key,
+      this.proxyBaseUrl,
+      this.httpClient,
+      this.startText,
+      this.debounce})
+      : super(key: key);
 
   @override
   State<PlacesAutocompleteWidget> createState() {
@@ -105,38 +105,34 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
         ? widget.overlayBorderRadius.topRight
         : Radius.circular(2);
 
-    final header = Column(
-      children: <Widget>[
-        Material(
-            color: theme.dialogBackgroundColor,
-            borderRadius: BorderRadius.only(
-                topLeft: headerTopLeftBorderRadius,
-                topRight: headerTopRightBorderRadius),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                IconButton(
-                  color: theme.brightness == Brightness.light
-                      ? Colors.black45
-                      : null,
-                  icon: _iconBack,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+    final header = Column(children: <Widget>[
+      Material(
+          color: theme.dialogBackgroundColor,
+          borderRadius: BorderRadius.only(
+              topLeft: headerTopLeftBorderRadius,
+              topRight: headerTopRightBorderRadius),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              IconButton(
+                color: theme.brightness == Brightness.light
+                    ? Colors.black45
+                    : null,
+                icon: _iconBack,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Expanded(
+                child: Padding(
+                  child: _textField(context),
+                  padding: const EdgeInsets.only(right: 8.0),
                 ),
-                Expanded(
-                  child: Padding(
-                    child: _textField(context),
-                    padding: const EdgeInsets.only(right: 8.0),
-                  ),
-                ),
-              ],
-            )),
-        Divider(
-            //height: 1.0,
-            )
-      ],
-    );
+              ),
+            ],
+          )),
+      Divider()
+    ]);
 
     final bodyBottomLeftBorderRadius = widget.overlayBorderRadius != null
         ? widget.overlayBorderRadius.bottomLeft
@@ -300,16 +296,15 @@ class _AppBarPlacesAutoCompleteTextFieldState
     assert(state != null);
 
     return Container(
-      alignment: Alignment.topLeft,
-      margin: EdgeInsets.only(top: 4.0),
-      child: TextField(
-        controller: state._queryTextController,
-        autofocus: true,
-        style: widget.textStyle ?? _defaultStyle(),
-        decoration:
-            widget.textDecoration ?? _defaultDecoration(state.widget.hint),
-      ),
-    );
+        alignment: Alignment.topLeft,
+        margin: EdgeInsets.only(top: 4.0),
+        child: TextField(
+          controller: state._queryTextController,
+          autofocus: true,
+          style: widget.textStyle ?? _defaultStyle(),
+          decoration:
+              widget.textDecoration ?? _defaultDecoration(state.widget.hint),
+        ));
   }
 
   InputDecoration _defaultDecoration(String hint) {
@@ -511,29 +506,28 @@ class SearchState {
 }
 
 class PlacesAutocomplete {
-  static Future<Prediction> show({
-    @required BuildContext context,
-    @required String apiKey,
-    Mode mode = Mode.fullscreen,
-    String hint = "Search",
-    BorderRadius overlayBorderRadius,
-    num offset,
-    Location location,
-    num radius,
-    String language,
-    String sessionToken,
-    List<String> types,
-    List<Component> components,
-    bool strictbounds,
-    String region,
-    Widget logo,
-    ValueChanged<PlacesAutocompleteResponse> onError,
-    String proxyBaseUrl,
-    Client httpClient,
-    String startText = "",
-    Duration debounce,
-    Location origin,
-  }) {
+  static Future<Prediction> show(
+      {@required BuildContext context,
+      @required String apiKey,
+      Mode mode = Mode.fullscreen,
+      String hint = "Search",
+      BorderRadius overlayBorderRadius,
+      num offset,
+      Location location,
+      num radius,
+      String language,
+      String sessionToken,
+      List<String> types,
+      List<Component> components,
+      bool strictbounds,
+      String region,
+      Widget logo,
+      ValueChanged<PlacesAutocompleteResponse> onError,
+      String proxyBaseUrl,
+      Client httpClient,
+      String startText = "",
+      Duration debounce,
+      Location origin}) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
           mode: mode,
