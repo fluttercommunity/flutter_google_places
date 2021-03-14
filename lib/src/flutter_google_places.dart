@@ -30,6 +30,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final Widget logo;
   final ValueChanged<PlacesAutocompleteResponse> onError;
   final Duration debounce;
+  final Map<String, String> headers;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -65,7 +66,8 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.proxyBaseUrl,
       this.httpClient,
       this.startText,
-      this.debounce})
+      this.debounce,
+      this.headers})
       : super(key: key);
 
   @override
@@ -153,7 +155,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               stream: state$,
               initialData: state,
               builder: (context, snapshot) {
-                final state = snapshot.data;
+                final state = snapshot.requireData;
 
                 if (state.isSearching) {
                   return Stack(
@@ -254,7 +256,7 @@ class PlacesAutocompleteResult extends StatelessWidget {
       stream: state.state$,
       initialData: state.state,
       builder: (context, snapshot) {
-        final state = snapshot.data;
+        final state = snapshot.requireData;
 
         if (state.text.isEmpty ||
             state.response == null ||
@@ -437,7 +439,10 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
       apiKey: widget.apiKey,
       baseUrl: widget.proxyBaseUrl,
       httpClient: widget.httpClient,
-      apiHeaders: headers,
+      apiHeaders: <String, String>{
+        ...headers,
+        ...?widget.headers,
+      },
     );
   }
 
@@ -446,37 +451,45 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
     debugPrint(
         '[flutter_google_places] input=$value location=${widget.location} origin=${widget.origin}');
-    final res = await _places.autocomplete(
-      value,
-      offset: widget.offset,
-      location: widget.location,
-      radius: widget.radius,
-      language: widget.language,
-      sessionToken: widget.sessionToken,
-      types: widget.types,
-      components: widget.components,
-      strictbounds: widget.strictbounds,
-      region: widget.region,
-      origin: widget.origin,
-    );
 
-    if (res.errorMessage?.isNotEmpty == true ||
-        res.status == 'REQUEST_DENIED') {
-      onResponseError(res);
+    try {
+      final res = await _places.autocomplete(
+        value,
+        offset: widget.offset,
+        location: widget.location,
+        radius: widget.radius,
+        language: widget.language,
+        sessionToken: widget.sessionToken,
+        types: widget.types,
+        components: widget.components,
+        strictbounds: widget.strictbounds,
+        region: widget.region,
+        origin: widget.origin,
+      );
+
+      if (res.errorMessage?.isNotEmpty == true ||
+          res.status == 'REQUEST_DENIED') {
+        debugPrint('[flutter_google_places] REQUEST_DENIED $res');
+        onResponseError(res);
+      }
+
+      final sorted =
+          res.predictions.sortedBy<num>((e) => e.distanceMeters ?? 0);
+      debugPrint(
+          '[flutter_google_places] sorted=${sorted.map((e) => e.distanceMeters).toList(growable: false)}');
+      yield SearchState(
+        false,
+        PlacesAutocompleteResponse(
+          res.status,
+          res.errorMessage,
+          sorted,
+        ),
+        value,
+      );
+    } catch (e, s) {
+      debugPrint('[flutter_google_places] ERROR $e $s');
+      yield SearchState(false, null, value);
     }
-
-    final sorted = res.predictions.sortedBy<num>((e) => e.distanceMeters ?? 0);
-    debugPrint(
-        '[flutter_google_places] sorted=${sorted.map((e) => e.distanceMeters).toList(growable: false)}');
-    yield SearchState(
-      false,
-      PlacesAutocompleteResponse(
-        res.status,
-        res.errorMessage,
-        sorted,
-      ),
-      value,
-    );
   }
 
   @override
@@ -503,6 +516,10 @@ class SearchState {
   final PlacesAutocompleteResponse response;
 
   SearchState(this.isSearching, this.response, this.text);
+
+  @override
+  String toString() =>
+      'SearchState{text: $text, isSearching: $isSearching, response: $response}';
 }
 
 class PlacesAutocomplete {

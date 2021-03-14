@@ -44,16 +44,12 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-final homeScaffoldKey = GlobalKey<ScaffoldState>();
-final searchScaffoldKey = GlobalKey<ScaffoldState>();
-
 class _MyAppState extends State<MyApp> {
   Mode _mode = Mode.overlay;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: homeScaffoldKey,
       appBar: AppBar(
         title: Text('My App'),
       ),
@@ -62,10 +58,12 @@ class _MyAppState extends State<MyApp> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _buildDropdownMenu(),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: _handlePressButton,
               child: Text('Search places'),
             ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pushNamed('/search');
@@ -97,13 +95,15 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void onError(PlacesAutocompleteResponse response) {
-    homeScaffoldKey.currentState.showSnackBar(
-      SnackBar(content: Text(response.errorMessage)),
-    );
-  }
-
   Future<void> _handlePressButton() async {
+    void onError(PlacesAutocompleteResponse response) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.errorMessage),
+        ),
+      );
+    }
+
     // show input autocomplete with selected mode
     // then get the Prediction selected
     final p = await PlacesAutocomplete.show(
@@ -115,25 +115,30 @@ class _MyAppState extends State<MyApp> {
       components: [Component(Component.country, 'fr')],
     );
 
-    await displayPrediction(p, homeScaffoldKey.currentState);
+    await displayPrediction(p, ScaffoldMessenger.of(context));
   }
 }
 
-Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
-  if (p != null) {
-    // get detail (lat/lng)
-    final _places = GoogleMapsPlaces(
-      apiKey: kGoogleApiKey,
-      apiHeaders: await GoogleApiHeaders().getHeaders(),
-    );
-    final detail = await _places.getDetailsByPlaceId(p.placeId);
-    final lat = detail.result.geometry.location.lat;
-    final lng = detail.result.geometry.location.lng;
-
-    scaffold.showSnackBar(
-      SnackBar(content: Text('${p.description} - $lat/$lng')),
-    );
+Future<void> displayPrediction(
+    Prediction p, ScaffoldMessengerState messengerState) async {
+  if (p == null) {
+    return;
   }
+
+  // get detail (lat/lng)
+  final _places = GoogleMapsPlaces(
+    apiKey: kGoogleApiKey,
+    apiHeaders: await GoogleApiHeaders().getHeaders(),
+  );
+  final detail = await _places.getDetailsByPlaceId(p.placeId);
+  final lat = detail.result.geometry.location.lat;
+  final lng = detail.result.geometry.location.lng;
+
+  messengerState.showSnackBar(
+    SnackBar(
+      content: Text('${p.description} - $lat/$lng'),
+    ),
+  );
 }
 
 // custom scaffold that handle search
@@ -155,23 +160,23 @@ class CustomSearchScaffold extends PlacesAutocompleteWidget {
 class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
-    final body = PlacesAutocompleteResult(
-      onTap: (p) {
-        displayPrediction(p, searchScaffoldKey.currentState);
-      },
-      logo: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [FlutterLogo()],
+    return Scaffold(
+      appBar: AppBar(title: AppBarPlacesAutoCompleteTextField()),
+      body: PlacesAutocompleteResult(
+        onTap: (p) => displayPrediction(p, ScaffoldMessenger.of(context)),
+        logo: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [FlutterLogo()],
+        ),
       ),
     );
-    return Scaffold(key: searchScaffoldKey, appBar: appBar, body: body);
   }
 
   @override
   void onResponseError(PlacesAutocompleteResponse response) {
     super.onResponseError(response);
-    searchScaffoldKey.currentState.showSnackBar(
+
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(response.errorMessage)),
     );
   }
@@ -179,8 +184,9 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   @override
   void onResponse(PlacesAutocompleteResponse response) {
     super.onResponse(response);
+
     if (response != null && response.predictions.isNotEmpty) {
-      searchScaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Got answer')),
       );
     }
