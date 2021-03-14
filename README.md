@@ -1,7 +1,9 @@
 # Updated by [@hoc081098](https://github.com/hoc081098). See [file changes](https://github.com/fluttercommunity/flutter_google_places/compare/master...hoc081098:main)
 
-- Add to support restricted API keys.
-- Refactoring by using RxDart for more power.
+- Migrated to **null-safety**
+- Refactoring by using **RxDart** for more power.
+- Fixed many issues.
+- Applied [pedantic](https://pub.dev/packages/pedantic).
 
 ```yaml
 flutter_google_places:
