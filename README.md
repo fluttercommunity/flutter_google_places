@@ -1,9 +1,11 @@
 # Updated by [@hoc081098](https://github.com/hoc081098). See [file changes](https://github.com/fluttercommunity/flutter_google_places/compare/master...hoc081098:main)
 
-- Migrated to **null-safety**
+- Migrated to **null-safety**.
+- Updated dependencies to latest release.
 - Refactoring by using **RxDart** for more power.
 - Fixed many issues.
 - Applied [pedantic](https://pub.dev/packages/pedantic).
+- Refactored example, migrated to Android v2 embedding.
 
 ```yaml
 flutter_google_places:
