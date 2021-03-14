@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _buildDropdownMenu() {
-    return DropdownButton(
+    return DropdownButton<Mode>(
       value: _mode,
       items: <DropdownMenuItem<Mode>>[
         DropdownMenuItem<Mode>(
@@ -90,7 +90,9 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       onChanged: (m) {
-        setState(() => _mode = m);
+        if (m != null) {
+          setState(() => _mode = m);
+        }
       },
     );
   }
@@ -99,7 +101,7 @@ class _MyAppState extends State<MyApp> {
     void onError(PlacesAutocompleteResponse response) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(response.errorMessage),
+          content: Text(response.errorMessage ?? 'Unknown error'),
         ),
       );
     }
@@ -120,7 +122,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 Future<void> displayPrediction(
-    Prediction p, ScaffoldMessengerState messengerState) async {
+    Prediction? p, ScaffoldMessengerState messengerState) async {
   if (p == null) {
     return;
   }
@@ -130,9 +132,11 @@ Future<void> displayPrediction(
     apiKey: kGoogleApiKey,
     apiHeaders: await GoogleApiHeaders().getHeaders(),
   );
-  final detail = await _places.getDetailsByPlaceId(p.placeId);
-  final lat = detail.result.geometry.location.lat;
-  final lng = detail.result.geometry.location.lng;
+
+  final detail = await _places.getDetailsByPlaceId(p.placeId!);
+  final geometry = detail.result.geometry!;
+  final lat = geometry.location.lat;
+  final lng = geometry.location.lng;
 
   messengerState.showSnackBar(
     SnackBar(
@@ -161,7 +165,9 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: AppBarPlacesAutoCompleteTextField()),
+      appBar: AppBar(
+          title: AppBarPlacesAutoCompleteTextField(
+              textStyle: null, textDecoration: null)),
       body: PlacesAutocompleteResult(
         onTap: (p) => displayPrediction(p, ScaffoldMessenger.of(context)),
         logo: Row(
@@ -177,7 +183,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
     super.onResponseError(response);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(response.errorMessage)),
+      SnackBar(content: Text(response.errorMessage ?? 'Unknown error')),
     );
   }
 
@@ -185,7 +191,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   void onResponse(PlacesAutocompleteResponse response) {
     super.onResponse(response);
 
-    if (response != null && response.predictions.isNotEmpty) {
+    if (response.predictions.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Got answer')),
       );

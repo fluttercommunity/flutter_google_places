@@ -13,40 +13,42 @@ import 'package:rxdart/rxdart.dart';
 
 class PlacesAutocompleteWidget extends StatefulWidget {
   final String apiKey;
-  final String startText;
-  final String hint;
-  final BorderRadius overlayBorderRadius;
-  final Location location;
-  final Location origin;
-  final num offset;
-  final num radius;
-  final String language;
-  final String sessionToken;
-  final List<String> types;
-  final List<Component> components;
-  final bool strictbounds;
-  final String region;
   final Mode mode;
-  final Widget logo;
-  final ValueChanged<PlacesAutocompleteResponse> onError;
-  final Duration debounce;
-  final Map<String, String> headers;
+  final String? hint;
+
+  final String? startText;
+  final BorderRadius? overlayBorderRadius;
+  final Location? location;
+  final Location? origin;
+  final num? offset;
+  final num? radius;
+  final String? language;
+  final String? sessionToken;
+  final List<String>? types;
+  final List<Component>? components;
+  final bool? strictbounds;
+  final String? region;
+  final Widget? logo;
+  final ValueChanged<PlacesAutocompleteResponse>? onError;
+  final Duration? debounce;
+  final Map<String, String>? headers;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
   /// In case of using a proxy the baseUrl can be set.
   /// The apiKey is not required in case the proxy sets it.
   /// (Not storing the apiKey in the app is good practice)
-  final String proxyBaseUrl;
+  final String? proxyBaseUrl;
 
   /// optional - set 'client' value in google_maps_webservice
   ///
   /// In case of using a proxy url that requires authentication
   /// or custom configuration
-  final BaseClient httpClient;
+  final Client? httpClient;
 
   PlacesAutocompleteWidget(
-      {@required this.apiKey,
+      {Key? key,
+      required this.apiKey,
       this.mode = Mode.fullscreen,
       this.hint = 'Search',
       this.overlayBorderRadius,
@@ -58,11 +60,10 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.sessionToken,
       this.types,
       this.components,
-      this.strictbounds = false,
+      this.strictbounds,
       this.region,
       this.logo,
       this.onError,
-      Key key,
       this.proxyBaseUrl,
       this.httpClient,
       this.startText,
@@ -79,13 +80,15 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   }
 
   static PlacesAutocompleteState of(BuildContext context) =>
-      context.findAncestorStateOfType<PlacesAutocompleteState>();
+      context.findAncestorStateOfType<PlacesAutocompleteState>()!;
 }
 
 class _PlacesAutocompleteScaffoldState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
+    final appBar = AppBar(
+        title: AppBarPlacesAutoCompleteTextField(
+            textDecoration: null, textStyle: null));
     final body = PlacesAutocompleteResult(
       onTap: Navigator.of(context).pop,
       logo: widget.logo,
@@ -99,13 +102,11 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final headerTopLeftBorderRadius = widget.overlayBorderRadius != null
-        ? widget.overlayBorderRadius.topLeft
-        : Radius.circular(2);
+    final headerTopLeftBorderRadius =
+        widget.overlayBorderRadius?.topLeft ?? Radius.circular(2);
 
-    final headerTopRightBorderRadius = widget.overlayBorderRadius != null
-        ? widget.overlayBorderRadius.topRight
-        : Radius.circular(2);
+    final headerTopRightBorderRadius =
+        widget.overlayBorderRadius?.topRight ?? Radius.circular(2);
 
     final header = Column(children: <Widget>[
       Material(
@@ -136,13 +137,11 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       Divider()
     ]);
 
-    final bodyBottomLeftBorderRadius = widget.overlayBorderRadius != null
-        ? widget.overlayBorderRadius.bottomLeft
-        : Radius.circular(2);
+    final bodyBottomLeftBorderRadius =
+        widget.overlayBorderRadius?.bottomLeft ?? Radius.circular(2);
 
-    final bodyBottomRightBorderRadius = widget.overlayBorderRadius != null
-        ? widget.overlayBorderRadius.bottomRight
-        : Radius.circular(2);
+    final bodyBottomRightBorderRadius =
+        widget.overlayBorderRadius?.bottomRight ?? Radius.circular(2);
 
     final container = Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
@@ -151,7 +150,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           header,
           Padding(
             padding: EdgeInsets.only(top: 48.0),
-            child: StreamBuilder<SearchState>(
+            child: StreamBuilder<_SearchState>(
               stream: state$,
               initialData: state,
               builder: (context, snapshot) {
@@ -164,7 +163,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                   );
                 } else if (state.text.isEmpty ||
                     state.response == null ||
-                    state.response.predictions.isEmpty) {
+                    state.response!.predictions.isEmpty) {
                   return Material(
                     color: theme.dialogBackgroundColor,
                     borderRadius: BorderRadius.only(
@@ -182,14 +181,15 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                       ),
                       color: theme.dialogBackgroundColor,
                       child: ListBody(
-                        children: state.response.predictions
-                            .map(
-                              (p) => PredictionTile(
-                                prediction: p,
-                                onTap: Navigator.of(context).pop,
-                              ),
-                            )
-                            .toList(growable: false),
+                        children: state.response?.predictions
+                                .map(
+                                  (p) => PredictionTile(
+                                    prediction: p,
+                                    onTap: Navigator.of(context).pop,
+                                  ),
+                                )
+                                .toList(growable: false) ??
+                            const [],
                       ),
                     ),
                   );
@@ -243,16 +243,15 @@ class _Loader extends StatelessWidget {
 
 class PlacesAutocompleteResult extends StatelessWidget {
   final ValueChanged<Prediction> onTap;
-  final Widget logo;
+  final Widget? logo;
 
-  PlacesAutocompleteResult({this.onTap, this.logo});
+  PlacesAutocompleteResult({required this.onTap, required this.logo});
 
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context);
-    assert(state != null);
 
-    return StreamBuilder<SearchState>(
+    return StreamBuilder<_SearchState>(
       stream: state.state$,
       initialData: state.state,
       builder: (context, snapshot) {
@@ -260,7 +259,7 @@ class PlacesAutocompleteResult extends StatelessWidget {
 
         if (state.text.isEmpty ||
             state.response == null ||
-            state.response.predictions.isEmpty) {
+            state.response!.predictions.isEmpty) {
           final children = <Widget>[];
           if (state.isSearching) {
             children.add(_Loader());
@@ -269,7 +268,7 @@ class PlacesAutocompleteResult extends StatelessWidget {
           return Stack(children: children);
         }
         return PredictionsListView(
-          predictions: state.response.predictions,
+          predictions: state.response?.predictions ?? const [],
           onTap: onTap,
         );
       },
@@ -278,11 +277,11 @@ class PlacesAutocompleteResult extends StatelessWidget {
 }
 
 class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
-  final InputDecoration textDecoration;
-  final TextStyle textStyle;
+  final InputDecoration? textDecoration;
+  final TextStyle? textStyle;
 
   AppBarPlacesAutoCompleteTextField(
-      {Key key, this.textDecoration, this.textStyle})
+      {Key? key, required this.textDecoration, required this.textStyle})
       : super(key: key);
 
   @override
@@ -295,7 +294,6 @@ class _AppBarPlacesAutoCompleteTextFieldState
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context);
-    assert(state != null);
 
     return Container(
         alignment: Alignment.topLeft,
@@ -309,7 +307,7 @@ class _AppBarPlacesAutoCompleteTextFieldState
         ));
   }
 
-  InputDecoration _defaultDecoration(String hint) {
+  InputDecoration _defaultDecoration(String? hint) {
     return InputDecoration(
       hintText: hint,
       filled: true,
@@ -342,7 +340,7 @@ class PoweredByGoogleImage extends StatelessWidget {
   final _poweredByGoogleBlack =
       'packages/flutter_google_places/assets/google_black.png';
 
-  const PoweredByGoogleImage({Key key}) : super(key: key);
+  const PoweredByGoogleImage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -363,7 +361,7 @@ class PredictionsListView extends StatelessWidget {
   final List<Prediction> predictions;
   final ValueChanged<Prediction> onTap;
 
-  PredictionsListView({@required this.predictions, this.onTap});
+  PredictionsListView({required this.predictions, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -379,18 +377,14 @@ class PredictionTile extends StatelessWidget {
   final Prediction prediction;
   final ValueChanged<Prediction> onTap;
 
-  PredictionTile({@required this.prediction, this.onTap});
+  PredictionTile({required this.prediction, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.location_on),
-      title: Text(prediction.description),
-      onTap: () {
-        if (onTap != null) {
-          onTap(prediction);
-        }
-      },
+      title: Text(prediction.description ?? ''),
+      onTap: () => onTap(prediction),
     );
   }
 }
@@ -398,24 +392,24 @@ class PredictionTile extends StatelessWidget {
 enum Mode { overlay, fullscreen }
 
 abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
-  TextEditingController _queryTextController;
-  GoogleMapsPlaces _places;
+  late final TextEditingController _queryTextController =
+      TextEditingController(text: widget.startText)
+        ..selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: widget.startText?.length ?? 0,
+        );
 
-  Stream<SearchState> state$;
-  var state = SearchState(false, null, '');
-  StreamSubscription<SearchState> subscription;
+  GoogleMapsPlaces? _places;
+
+  late final Stream<_SearchState> state$;
+  var state = _SearchState(false, null, '');
+  StreamSubscription<_SearchState>? subscription;
 
   @override
   void initState() {
     super.initState();
 
     _initPlaces();
-    _queryTextController = TextEditingController(text: widget.startText);
-    _queryTextController.selection = TextSelection(
-      baseOffset: 0,
-      extentOffset: widget.startText?.length ?? 0,
-    );
-
     state$ = _queryTextController
         .toValueStream(replayValue: true)
         .map((event) => event.text)
@@ -450,8 +444,8 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     );
   }
 
-  Stream<SearchState> doSearch(String value) async* {
-    yield SearchState(true, null, value);
+  Stream<_SearchState> doSearch(String value) async* {
+    yield _SearchState(true, null, value);
 
     assert(() {
       debugPrint(
@@ -460,7 +454,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     }());
 
     try {
-      final res = await _places.autocomplete(
+      final res = await _places!.autocomplete(
         value,
         offset: widget.offset,
         location: widget.location,
@@ -469,7 +463,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         sessionToken: widget.sessionToken,
         types: widget.types ?? const [],
         components: widget.components ?? const [],
-        strictbounds: widget.strictbounds,
+        strictbounds: widget.strictbounds ?? false,
         region: widget.region,
         origin: widget.origin,
       );
@@ -483,7 +477,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         onResponseError(res);
       }
 
-      yield SearchState(
+      yield _SearchState(
         false,
         PlacesAutocompleteResponse(
           status: res.status,
@@ -497,15 +491,19 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         debugPrint('[flutter_google_places] ERROR $e $s');
         return true;
       }());
-      yield SearchState(false, null, value);
+      yield _SearchState(false, null, value);
     }
   }
 
   @override
   void dispose() {
-    subscription.cancel();
+    subscription?.cancel();
+    subscription = null;
     _queryTextController.dispose();
-    _places.dispose();
+
+    _places?.dispose();
+    _places = null;
+
     super.dispose();
   }
 
@@ -536,42 +534,42 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   }
 }
 
-class SearchState {
+class _SearchState {
   final String text;
   final bool isSearching;
-  final PlacesAutocompleteResponse response;
+  final PlacesAutocompleteResponse? response;
 
-  SearchState(this.isSearching, this.response, this.text);
+  _SearchState(this.isSearching, this.response, this.text);
 
   @override
   String toString() =>
-      'SearchState{text: $text, isSearching: $isSearching, response: $response}';
+      '_SearchState{text: $text, isSearching: $isSearching, response: $response}';
 }
 
 class PlacesAutocomplete {
-  static Future<Prediction> show(
-      {@required BuildContext context,
-      @required String apiKey,
+  static Future<Prediction?> show(
+      {required BuildContext context,
+      required String apiKey,
       Mode mode = Mode.fullscreen,
-      String hint = 'Search',
-      BorderRadius overlayBorderRadius,
-      num offset,
-      Location location,
-      num radius,
-      String language,
-      String sessionToken,
-      List<String> types,
-      List<Component> components,
-      bool strictbounds = false,
-      String region,
-      Widget logo,
-      ValueChanged<PlacesAutocompleteResponse> onError,
-      String proxyBaseUrl,
-      Client httpClient,
-      String startText = '',
-      Duration debounce,
-      Location origin}) {
-    final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
+      String? hint = 'Search',
+      BorderRadius? overlayBorderRadius,
+      num? offset,
+      Location? location,
+      num? radius,
+      String? language,
+      String? sessionToken,
+      List<String>? types,
+      List<Component>? components,
+      bool? strictbounds,
+      String? region,
+      Widget? logo,
+      ValueChanged<PlacesAutocompleteResponse>? onError,
+      String? proxyBaseUrl,
+      Client? httpClient,
+      String? startText,
+      Duration? debounce,
+      Location? origin}) {
+    final builder = (BuildContext context) => PlacesAutocompleteWidget(
           apiKey: apiKey,
           mode: mode,
           overlayBorderRadius: overlayBorderRadius,
@@ -595,8 +593,9 @@ class PlacesAutocomplete {
         );
 
     if (mode == Mode.overlay) {
-      return showDialog(context: context, builder: builder);
+      return showDialog<Prediction>(context: context, builder: builder);
     }
-    return Navigator.push(context, MaterialPageRoute(builder: builder));
+    return Navigator.push<Prediction>(
+        context, MaterialPageRoute(builder: builder));
   }
 }

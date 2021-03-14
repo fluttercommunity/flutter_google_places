@@ -43,28 +43,28 @@ class PlacesAutocompleteFormField extends FormField<String> {
   /// For documentation about the various parameters, see the [PlacesAutocompleteField] class
   /// and [new PlacesAutocompleteField], the constructor.
   PlacesAutocompleteFormField({
-    Key key,
-    @required String apiKey,
+    Key? key,
+    required String apiKey,
     this.controller,
-    Icon leading,
-    String initialValue,
-    String hint = 'Search',
-    Icon trailing,
-    VoidCallback trailingOnTap,
+    Icon? leading,
+    String? initialValue,
+    String? hint = 'Search',
+    Icon? trailing,
+    VoidCallback? trailingOnTap,
     Mode mode = Mode.fullscreen,
-    num offset,
-    Location location,
-    num radius,
-    String language,
-    String sessionToken,
-    List<String> types,
-    List<Component> components,
-    bool strictbounds,
-    ValueChanged<PlacesAutocompleteResponse> onError,
-    InputDecoration inputDecoration = const InputDecoration(),
+    num? offset,
+    Location? location,
+    num? radius,
+    String? language,
+    String? sessionToken,
+    List<String>? types,
+    List<Component>? components,
+    bool? strictbounds,
+    ValueChanged<PlacesAutocompleteResponse>? onError,
+    InputDecoration? inputDecoration = const InputDecoration(),
     AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
-    FormFieldSetter<String> onSaved,
-    FormFieldValidator<String> validator,
+    FormFieldSetter<String>? onSaved,
+    FormFieldValidator<String>? validator,
   })  : assert(initialValue == null || controller == null),
         super(
           key: key,
@@ -74,7 +74,7 @@ class PlacesAutocompleteFormField extends FormField<String> {
           validator: validator,
           autovalidateMode: autovalidateMode,
           builder: (FormFieldState<String> field) {
-            final _TextFormFieldState state = field;
+            final state = field as _TextFormFieldState;
             final effectiveDecoration = inputDecoration
                 ?.applyDefaults(Theme.of(state.context).inputDecorationTheme);
             return PlacesAutocompleteField(
@@ -106,20 +106,21 @@ class PlacesAutocompleteFormField extends FormField<String> {
   ///
   /// If null, this widget will create its own [TextEditingController] and
   /// initialize its [TextEditingController.text] with [initialValue].
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   @override
   _TextFormFieldState createState() => _TextFormFieldState();
 }
 
 class _TextFormFieldState extends FormFieldState<String> {
-  TextEditingController _controller;
+  TextEditingController? _controller;
 
   TextEditingController get _effectiveController =>
-      widget.controller ?? _controller;
+      widget.controller ?? _controller!;
 
   @override
-  PlacesAutocompleteFormField get widget => super.widget;
+  PlacesAutocompleteFormField get widget =>
+      super.widget as PlacesAutocompleteFormField;
 
   @override
   void initState() {
@@ -127,7 +128,7 @@ class _TextFormFieldState extends FormFieldState<String> {
     if (widget.controller == null) {
       _controller = TextEditingController(text: widget.initialValue);
     } else {
-      widget.controller.addListener(_handleControllerChanged);
+      widget.controller!.addListener(_handleControllerChanged);
     }
   }
 
@@ -140,11 +141,13 @@ class _TextFormFieldState extends FormFieldState<String> {
 
       if (oldWidget.controller != null && widget.controller == null) {
         _controller =
-            TextEditingController.fromValue(oldWidget.controller.value);
+            TextEditingController.fromValue(oldWidget.controller!.value);
       }
       if (widget.controller != null) {
-        setValue(widget.controller.text);
-        if (oldWidget.controller == null) _controller = null;
+        setValue(widget.controller!.text);
+        if (oldWidget.controller == null) {
+          _controller = null;
+        }
       }
     }
   }
@@ -159,7 +162,7 @@ class _TextFormFieldState extends FormFieldState<String> {
   void reset() {
     super.reset();
     setState(() {
-      _effectiveController.text = widget.initialValue;
+      _effectiveController.text = widget.initialValue ?? '';
     });
   }
 
