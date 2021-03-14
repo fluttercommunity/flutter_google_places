@@ -58,7 +58,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.sessionToken,
       this.types,
       this.components,
-      this.strictbounds,
+      this.strictbounds = false,
       this.region,
       this.logo,
       this.onError,
@@ -430,7 +430,11 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
   Future<void> _initPlaces() async {
     final headers = await GoogleApiHeaders().getHeaders();
-    debugPrint('[flutter_google_places] headers=$headers');
+
+    assert(() {
+      debugPrint('[flutter_google_places] headers=$headers');
+      return true;
+    }());
 
     if (!mounted) {
       return;
@@ -449,8 +453,11 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   Stream<SearchState> doSearch(String value) async* {
     yield SearchState(true, null, value);
 
-    debugPrint(
-        '[flutter_google_places] input=$value location=${widget.location} origin=${widget.origin}');
+    assert(() {
+      debugPrint(
+          '[flutter_google_places] input=$value location=${widget.location} origin=${widget.origin}');
+      return true;
+    }());
 
     try {
       final res = await _places.autocomplete(
@@ -460,8 +467,8 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
         radius: widget.radius,
         language: widget.language,
         sessionToken: widget.sessionToken,
-        types: widget.types,
-        components: widget.components,
+        types: widget.types ?? const [],
+        components: widget.components ?? const [],
         strictbounds: widget.strictbounds,
         region: widget.region,
         origin: widget.origin,
@@ -469,25 +476,27 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
       if (res.errorMessage?.isNotEmpty == true ||
           res.status == 'REQUEST_DENIED') {
-        debugPrint('[flutter_google_places] REQUEST_DENIED $res');
+        assert(() {
+          debugPrint('[flutter_google_places] REQUEST_DENIED $res');
+          return true;
+        }());
         onResponseError(res);
       }
 
-      final sorted =
-          res.predictions.sortedBy<num>((e) => e.distanceMeters ?? 0);
-      debugPrint(
-          '[flutter_google_places] sorted=${sorted.map((e) => e.distanceMeters).toList(growable: false)}');
       yield SearchState(
         false,
         PlacesAutocompleteResponse(
-          res.status,
-          res.errorMessage,
-          sorted,
+          status: res.status,
+          errorMessage: res.errorMessage,
+          predictions: _sorted(res.predictions),
         ),
         value,
       );
     } catch (e, s) {
-      debugPrint('[flutter_google_places] ERROR $e $s');
+      assert(() {
+        debugPrint('[flutter_google_places] ERROR $e $s');
+        return true;
+      }());
       yield SearchState(false, null, value);
     }
   }
@@ -508,6 +517,23 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
   @mustCallSuper
   void onResponse(PlacesAutocompleteResponse res) {}
+
+  static List<Prediction> _sorted(List<Prediction> predictions) {
+    if (predictions.isEmpty ||
+        predictions.every((e) => e.distanceMeters == null)) {
+      return predictions;
+    }
+
+    final sorted = predictions.sortedBy<num>((e) => e.distanceMeters ?? 0);
+
+    assert(() {
+      debugPrint(
+          '[flutter_google_places] sorted=${sorted.map((e) => e.distanceMeters).toList(growable: false)}');
+      return true;
+    }());
+
+    return sorted;
+  }
 }
 
 class SearchState {
@@ -536,7 +562,7 @@ class PlacesAutocomplete {
       String sessionToken,
       List<String> types,
       List<Component> components,
-      bool strictbounds,
+      bool strictbounds = false,
       String region,
       Widget logo,
       ValueChanged<PlacesAutocompleteResponse> onError,

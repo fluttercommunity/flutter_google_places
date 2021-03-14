@@ -70,12 +70,10 @@ packages:
   google_maps_webservice:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "98dc0bd451abb041a17f3efd254d5b983cbdb923"
-      resolved-ref: "98dc0bd451abb041a17f3efd254d5b983cbdb923"
-      url: "https://github.com/Flutter-Dart-Open-Source/google_maps_webservice.git"
-    source: git
-    version: "0.0.20"
+      name: google_maps_webservice
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.20-nullsafety.1"
   http:
     dependency: "direct main"
     description:
@@ -87,6 +85,13 @@ packages:
     dependency: transitive
     description:
       name: http_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
