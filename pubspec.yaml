@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  google_api_headers: ">=0.1.0 <1.0.0"
+  google_api_headers: ^1.0.0
   google_maps_webservice: ^0.0.19
   http: ">=0.11.0 <1.0.0"
   rxdart: ^0.25.0
