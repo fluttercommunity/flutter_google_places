@@ -1,4 +1,4 @@
-library flutter_google_places.src;
+library flutter_google_places_hoc081098.src;
 
 import 'dart:async';
 
@@ -336,9 +336,9 @@ class _AppBarPlacesAutoCompleteTextFieldState
 
 class PoweredByGoogleImage extends StatelessWidget {
   final _poweredByGoogleWhite =
-      'packages/flutter_google_places/assets/google_white.png';
+      'packages/flutter_google_places_hoc081098/assets/google_white.png';
   final _poweredByGoogleBlack =
-      'packages/flutter_google_places/assets/google_black.png';
+      'packages/flutter_google_places_hoc081098/assets/google_black.png';
 
   const PoweredByGoogleImage({Key? key}) : super(key: key);
 
@@ -426,7 +426,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     final headers = await GoogleApiHeaders().getHeaders();
 
     assert(() {
-      debugPrint('[flutter_google_places] headers=$headers');
+      debugPrint('[flutter_google_places_hoc081098] headers=$headers');
       return true;
     }());
 
@@ -449,7 +449,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
     assert(() {
       debugPrint(
-          '[flutter_google_places] input=$value location=${widget.location} origin=${widget.origin}');
+          '[flutter_google_places_hoc081098] input=$value location=${widget.location} origin=${widget.origin}');
       return true;
     }());
 
@@ -471,7 +471,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
       if (res.errorMessage?.isNotEmpty == true ||
           res.status == 'REQUEST_DENIED') {
         assert(() {
-          debugPrint('[flutter_google_places] REQUEST_DENIED $res');
+          debugPrint('[flutter_google_places_hoc081098] REQUEST_DENIED $res');
           return true;
         }());
         onResponseError(res);
@@ -488,7 +488,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
       );
     } catch (e, s) {
       assert(() {
-        debugPrint('[flutter_google_places] ERROR $e $s');
+        debugPrint('[flutter_google_places_hoc081098] ERROR $e $s');
         return true;
       }());
       yield _SearchState(false, null, value);
@@ -526,7 +526,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 
     assert(() {
       debugPrint(
-          '[flutter_google_places] sorted=${sorted.map((e) => e.distanceMeters).toList(growable: false)}');
+          '[flutter_google_places_hoc081098] sorted=${sorted.map((e) => e.distanceMeters).toList(growable: false)}');
       return true;
     }());
 

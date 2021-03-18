@@ -1,3 +1,22 @@
+# flutter_google_places_hoc081098 changelog
+
+## 1.0.0-nullsafety.0 - Mar 18, 2021
+
+-   Initial version of `flutter_google_places_hoc081098`.
+    Forked from [fluttercommunity/flutter_google_places](https://github.com/fluttercommunity/flutter_google_places).
+-   Opt into **null safety**.
+-   Sdk constraints: `>=2.12.0 <3.0.0`.
+-   Compatible with **flutter 2.0.0 stable**.
+-   Updated dependencies to latest release.
+-   Refactoring by using **RxDart** for more power.
+-   Fixed many issues.
+-   Applied [pedantic](https://pub.dev/packages/pedantic).
+-   Refactored example, migrated it to Android v2 embedding.
+
+----------
+
+# [fluttercommunity/flutter_google_places](https://github.com/fluttercommunity/flutter_google_places/blob/master/CHANGELOG.md) changelog
+
 ## 0.2.8
 
 - Fix pub.dev complaints
