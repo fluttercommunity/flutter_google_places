@@ -70,10 +70,11 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.debounce,
       this.headers})
       : super(key: key) {
-        if (apiKey == null && proxyBaseUrl == null) {
-          throw ArgumentError('One of `apiKey` and `proxyBaseUrl` fields is required');
-        }
-      }
+    if (apiKey == null && proxyBaseUrl == null) {
+      throw ArgumentError(
+          'One of `apiKey` and `proxyBaseUrl` fields is required');
+    }
+  }
 
   @override
   State<PlacesAutocompleteWidget> createState() {

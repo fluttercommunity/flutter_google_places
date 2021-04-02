@@ -1,5 +1,11 @@
 # flutter_google_places_hoc081098 changelog
 
+## 1.0.0-nullsafety.1 - Apr 02, 2021
+
+-   Add `headers` param to `PlacesAutocomplete.show`, `PlacesAutocompleteWidget`, `PlacesAutocompleteField` and `PlacesAutocompleteFormField`.
+-   Change `apiKey` to nullable string (when using a proxy to request Google APIs, the `apiKey` is added on the proxy itself, 
+    consequently the `apiKey` should be `null`) (thanks to [@corentingiraud](https://github.com/corentingiraud)).
+
 ## 1.0.0-nullsafety.0 - Mar 18, 2021
 
 -   Initial version of `flutter_google_places_hoc081098`.
