@@ -12,7 +12,7 @@ import 'package:listenable_stream/listenable_stream.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PlacesAutocompleteWidget extends StatefulWidget {
-  final String apiKey;
+  final String? apiKey;
   final Mode mode;
   final String? hint;
 
@@ -69,7 +69,11 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.startText,
       this.debounce,
       this.headers})
-      : super(key: key);
+      : super(key: key) {
+        if (apiKey == null && proxyBaseUrl == null) {
+          throw ArgumentError('One of `apiKey` and `proxyBaseUrl` fields is required');
+        }
+      }
 
   @override
   State<PlacesAutocompleteWidget> createState() {
@@ -549,7 +553,7 @@ class _SearchState {
 class PlacesAutocomplete {
   static Future<Prediction?> show(
       {required BuildContext context,
-      required String apiKey,
+      required String? apiKey,
       Mode mode = Mode.fullscreen,
       String? hint = 'Search',
       BorderRadius? overlayBorderRadius,

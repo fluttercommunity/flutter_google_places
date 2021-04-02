@@ -44,7 +44,7 @@ class PlacesAutocompleteFormField extends FormField<String> {
   /// and [new PlacesAutocompleteField], the constructor.
   PlacesAutocompleteFormField({
     Key? key,
-    required String apiKey,
+    required String? apiKey,
     this.controller,
     Icon? leading,
     String? initialValue,
