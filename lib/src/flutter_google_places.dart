@@ -572,7 +572,8 @@ class PlacesAutocomplete {
       Client? httpClient,
       String? startText,
       Duration? debounce,
-      Location? origin}) {
+      Location? origin,
+      Map<String, String>? headers}) {
     final builder = (BuildContext context) => PlacesAutocompleteWidget(
           apiKey: apiKey,
           mode: mode,
@@ -594,6 +595,7 @@ class PlacesAutocomplete {
           startText: startText,
           debounce: debounce,
           origin: origin,
+          headers: headers,
         );
 
     if (mode == Mode.overlay) {

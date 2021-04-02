@@ -65,6 +65,7 @@ class PlacesAutocompleteFormField extends FormField<String> {
     AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
     FormFieldSetter<String>? onSaved,
     FormFieldValidator<String>? validator,
+    Map<String, String>? headers,
   })  : assert(initialValue == null || controller == null),
         super(
           key: key,
@@ -98,6 +99,7 @@ class PlacesAutocompleteFormField extends FormField<String> {
               strictbounds: strictbounds,
               onChanged: state.didChange,
               onError: onError,
+              headers: headers,
             );
           },
         );
