@@ -9,7 +9,6 @@ dependencies:
     sdk: flutter
   flutter_google_places:
     path: ../
-  google_api_headers: ^0.1.1+1
 
 dev_dependencies:
   flutter_test:
