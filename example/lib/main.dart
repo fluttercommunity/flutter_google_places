@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
 
 const kGoogleApiKey = "API_KEY";
 
@@ -111,6 +111,15 @@ class _MyAppState extends State<MyApp> {
       onError: onError,
       mode: _mode,
       language: "fr",
+      decoration: InputDecoration(
+        hintText: 'Search',
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            color: Colors.white,
+          ),
+        ),
+      ),
       components: [Component(Component.country, "fr")],
     );
 

@@ -1,6 +1,7 @@
 library flutter_google_places.src;
 
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_api_headers/google_api_headers.dart';
@@ -26,6 +27,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final Widget logo;
   final ValueChanged<PlacesAutocompleteResponse> onError;
   final int debounce;
+  final InputDecoration decoration;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -40,28 +42,29 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// or custom configuration
   final BaseClient httpClient;
 
-  PlacesAutocompleteWidget(
-      {@required this.apiKey,
-      this.mode = Mode.fullscreen,
-      this.hint = "Search",
-      this.overlayBorderRadius,
-      this.offset,
-      this.location,
-      this.radius,
-      this.language,
-      this.sessionToken,
-      this.types,
-      this.components,
-      this.strictbounds,
-      this.region,
-      this.logo,
-      this.onError,
-      Key key,
-      this.proxyBaseUrl,
-      this.httpClient,
-      this.startText,
-      this.debounce = 300})
-      : super(key: key);
+  PlacesAutocompleteWidget({
+    @required this.apiKey,
+    this.mode = Mode.fullscreen,
+    this.hint = "Search",
+    this.overlayBorderRadius,
+    this.offset,
+    this.location,
+    this.radius,
+    this.language,
+    this.sessionToken,
+    this.types,
+    this.components,
+    this.strictbounds,
+    this.region,
+    this.logo,
+    this.onError,
+    Key key,
+    this.proxyBaseUrl,
+    this.httpClient,
+    this.startText,
+    this.debounce = 300,
+    this.decoration,
+  }) : super(key: key);
 
   @override
   State<PlacesAutocompleteWidget> createState() {
@@ -78,7 +81,11 @@ class PlacesAutocompleteWidget extends StatefulWidget {
 class _PlacesAutocompleteScaffoldState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
+    final appBar = AppBar(
+      title: AppBarPlacesAutoCompleteTextField(
+        textDecoration: widget.decoration,
+      ),
+    );
     final body = PlacesAutocompleteResult(
       onTap: Navigator.of(context).pop,
       logo: widget.logo,
@@ -203,16 +210,17 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                 ? Colors.black87
                 : null,
             fontSize: 16.0),
-        decoration: InputDecoration(
-          hintText: widget.hint,
-          hintStyle: TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black45
-                : null,
-            fontSize: 16.0,
-          ),
-          border: InputBorder.none,
-        ),
+        decoration: widget.decoration ??
+            InputDecoration(
+              hintText: widget.hint,
+              hintStyle: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black45
+                    : null,
+                fontSize: 16.0,
+              ),
+              border: InputBorder.none,
+            ),
       );
 }
 
@@ -486,26 +494,28 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
 }
 
 class PlacesAutocomplete {
-  static Future<Prediction> show(
-      {@required BuildContext context,
-      @required String apiKey,
-      Mode mode = Mode.fullscreen,
-      String hint = "Search",
-      BorderRadius overlayBorderRadius,
-      num offset,
-      Location location,
-      num radius,
-      String language,
-      String sessionToken,
-      List<String> types,
-      List<Component> components,
-      bool strictbounds,
-      String region,
-      Widget logo,
-      ValueChanged<PlacesAutocompleteResponse> onError,
-      String proxyBaseUrl,
-      Client httpClient,
-      String startText = ""}) {
+  static Future<Prediction> show({
+    @required BuildContext context,
+    @required String apiKey,
+    Mode mode = Mode.fullscreen,
+    String hint = "Search",
+    BorderRadius overlayBorderRadius,
+    num offset,
+    Location location,
+    num radius,
+    String language,
+    String sessionToken,
+    List<String> types,
+    List<Component> components,
+    bool strictbounds,
+    String region,
+    Widget logo,
+    ValueChanged<PlacesAutocompleteResponse> onError,
+    String proxyBaseUrl,
+    Client httpClient,
+    InputDecoration decoration,
+    String startText = "",
+  }) {
     final builder = (BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
           mode: mode,
@@ -525,6 +535,7 @@ class PlacesAutocomplete {
           proxyBaseUrl: proxyBaseUrl,
           httpClient: httpClient,
           startText: startText,
+          decoration: decoration,
         );
 
     if (mode == Mode.overlay) {
