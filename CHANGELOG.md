@@ -1,3 +1,11 @@
+## 0.3.0
+
+- Update packages
+- Upgrade to null safety
+- Upgrade and migrate android project to AndroidX
+- PlacesAutocompleteFormField: replaced deprecated autovalidate with autovalidateMode
+- PlacesAutocompleteWidget: removed deprecated methods, added decoration for fullscreen and overlay places widget
+
 ## 0.2.8
 
 - Fix pub.dev complaints

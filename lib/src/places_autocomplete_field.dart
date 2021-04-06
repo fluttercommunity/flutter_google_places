@@ -37,8 +37,8 @@ class PlacesAutocompleteField extends StatefulWidget {
   /// by the decoration to save space for the labels), set the [decoration] to
   /// null.
   const PlacesAutocompleteField({
-    Key key,
-    @required this.apiKey,
+    Key? key,
+    required this.apiKey,
     this.controller,
     this.leading,
     this.hint = "Search",
@@ -62,16 +62,16 @@ class PlacesAutocompleteField extends StatefulWidget {
   /// Controls the text being edited.
   ///
   /// If null, this widget will create its own [TextEditingController].
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   /// Icon shown inside the field left to the text.
-  final Icon leading;
+  final Icon? leading;
 
   /// Icon shown inside the field right to the text.
-  final Icon trailing;
+  final Icon? trailing;
 
   /// Callback when [trailing] is tapped on.
-  final VoidCallback trailingOnTap;
+  final VoidCallback? trailingOnTap;
 
   /// Text that is shown, when no input was done, yet.
   final String hint;
@@ -93,7 +93,7 @@ class PlacesAutocompleteField extends StatefulWidget {
   ///
   /// Specify null to remove the decoration entirely (including the
   /// extra padding introduced by the decoration to save space for the labels).
-  final InputDecoration inputDecoration;
+  final InputDecoration? inputDecoration;
 
   /// The position, in the input term, of the last character that the service
   /// uses to match predictions.
@@ -107,32 +107,32 @@ class PlacesAutocompleteField extends StatefulWidget {
   /// position of the text caret.
   ///
   /// Source: https://developers.google.com/places/web-service/autocomplete
-  final num offset;
+  final num? offset;
 
   final Mode mode;
 
-  final String language;
+  final String? language;
 
-  final String sessionToken;
+  final String? sessionToken;
 
-  final List<String> types;
+  final List<String>? types;
 
-  final List<Component> components;
+  final List<Component>? components;
 
-  final Location location;
+  final Location? location;
 
-  final num radius;
+  final num? radius;
 
-  final bool strictbounds;
+  final bool? strictbounds;
 
   /// Called when the text being edited changes.
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String?>? onChanged;
 
   /// Called when an autocomplete entry is selected.
-  final ValueChanged<Prediction> onSelected;
+  final ValueChanged<Prediction>? onSelected;
 
   /// Callback when autocomplete has error.
-  final ValueChanged<PlacesAutocompleteResponse> onError;
+  final ValueChanged<PlacesAutocompleteResponse>? onError;
 
   @override
   _LocationAutocompleteFieldState createState() =>
@@ -140,8 +140,8 @@ class PlacesAutocompleteField extends StatefulWidget {
 }
 
 class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
-  TextEditingController _controller;
-  TextEditingController get _effectiveController =>
+  TextEditingController? _controller;
+  TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
 
   @override
@@ -154,15 +154,16 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
   void didUpdateWidget(PlacesAutocompleteField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != null) {
-      widget.controller.text = oldWidget.controller.text;
+      widget.controller!.text = oldWidget.controller!.text;
     }
     if (widget.controller == null && oldWidget.controller != null)
-      _controller = TextEditingController.fromValue(oldWidget.controller.value);
+      _controller =
+          TextEditingController.fromValue(oldWidget.controller!.value);
     else if (widget.controller != null && oldWidget.controller == null)
       _controller = null;
   }
 
-  Future<Prediction> _showAutocomplete() async => PlacesAutocomplete.show(
+  Future<Prediction?> _showAutocomplete() async => PlacesAutocomplete.show(
         context: context,
         apiKey: widget.apiKey,
         offset: widget.offset,
@@ -179,24 +180,24 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
       );
 
   void _handleTap() async {
-    Prediction p = await _showAutocomplete();
+    Prediction? p = await _showAutocomplete();
 
     if (p == null) return;
 
     setState(() {
-      _effectiveController.text = p.description;
+      _effectiveController!.text = p.description!;
       if (widget.onChanged != null) {
-        widget.onChanged(p.description);
+        widget.onChanged!(p.description);
       }
       if (widget.onSelected != null) {
-        widget.onSelected(p);
+        widget.onSelected!(p);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = _effectiveController;
+    final TextEditingController controller = _effectiveController!;
 
     var text = controller.text.isNotEmpty
         ? Text(
@@ -204,7 +205,7 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
             softWrap: true,
           )
         : Text(
-            widget.hint ?? '',
+            widget.hint,
             style: TextStyle(color: Colors.black38),
           );
 
@@ -223,7 +224,7 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
                 child: widget.trailingOnTap != null
                     ? widget.trailing
                     : Icon(
-                        widget.trailing.icon,
+                        widget.trailing!.icon,
                         color: Colors.grey,
                       ),
               )
@@ -233,7 +234,7 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
 
     if (widget.inputDecoration != null) {
       child = InputDecorator(
-        decoration: widget.inputDecoration,
+        decoration: widget.inputDecoration!,
         isEmpty: controller.value.text.isEmpty,
         child: child,
       );
