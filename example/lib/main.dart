@@ -9,12 +9,12 @@ import 'package:google_maps_webservice/places.dart';
 const kGoogleApiKey = "API_KEY";
 
 main() {
-  runApp(RoutesWidget());
+  runApp(const RoutesWidget());
 }
 
 final customTheme = ThemeData(
   brightness: Brightness.dark,
-  inputDecorationTheme: InputDecorationTheme(
+  inputDecorationTheme: const InputDecorationTheme(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(4.00)),
     ),
@@ -26,19 +26,23 @@ final customTheme = ThemeData(
 );
 
 class RoutesWidget extends StatelessWidget {
+  const RoutesWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: "My App",
         darkTheme: customTheme,
         themeMode: ThemeMode.dark,
         routes: {
-          "/": (_) => MyApp(),
+          "/": (_) => const MyApp(),
           "/search": (_) => CustomSearchScaffold(),
         },
       );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -54,7 +58,7 @@ class _MyAppState extends State<MyApp> {
     return Scaffold(
       key: homeScaffoldKey,
       appBar: AppBar(
-        title: Text("My App"),
+        title: const Text("My App"),
       ),
       body: Center(
           child: Column(
@@ -63,10 +67,10 @@ class _MyAppState extends State<MyApp> {
           _buildDropdownMenu(),
           ElevatedButton(
             onPressed: _handlePressButton,
-            child: Text("Search places"),
+            child: const Text("Search places"),
           ),
           ElevatedButton(
-            child: Text("Custom"),
+            child: const Text("Custom"),
             onPressed: () {
               Navigator.of(context).pushNamed("/search");
             },
@@ -78,7 +82,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget _buildDropdownMenu() => DropdownButton(
         value: _mode,
-        items: <DropdownMenuItem<Mode>>[
+        items: const <DropdownMenuItem<Mode>>[
           DropdownMenuItem<Mode>(
             child: Text("Overlay"),
             value: Mode.overlay,
@@ -114,7 +118,7 @@ class _MyAppState extends State<MyApp> {
         hintText: 'Search',
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.white,
           ),
         ),
@@ -126,12 +130,12 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-Future<Null> displayPrediction(Prediction? p, BuildContext context) async {
+Future<void> displayPrediction(Prediction? p, BuildContext context) async {
   if (p != null) {
     // get detail (lat/lng)
     GoogleMapsPlaces _places = GoogleMapsPlaces(
       apiKey: kGoogleApiKey,
-      apiHeaders: await GoogleApiHeaders().getHeaders(),
+      apiHeaders: await const GoogleApiHeaders().getHeaders(),
     );
     PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId!);
     final lat = detail.result.geometry!.location.lat;
@@ -147,8 +151,8 @@ Future<Null> displayPrediction(Prediction? p, BuildContext context) async {
 // basically your widget need to extends [GooglePlacesAutocompleteWidget]
 // and your state [GooglePlacesAutocompleteState]
 class CustomSearchScaffold extends PlacesAutocompleteWidget {
-  CustomSearchScaffold()
-      : super(
+  CustomSearchScaffold({Key? key})
+      : super(key: key,
           apiKey: kGoogleApiKey,
           sessionToken: Uuid().generateV4(),
           language: "en",
@@ -162,13 +166,13 @@ class CustomSearchScaffold extends PlacesAutocompleteWidget {
 class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
+    final appBar = AppBar(title: const AppBarPlacesAutoCompleteTextField());
     final body = PlacesAutocompleteResult(
       onTap: (p) {
         displayPrediction(p, context);
       },
       logo: Row(
-        children: [FlutterLogo()],
+        children: const [FlutterLogo()],
         mainAxisAlignment: MainAxisAlignment.center,
       ),
     );
@@ -188,7 +192,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
     super.onResponse(response);
     if (response != null && response.predictions.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Got answer")),
+        const SnackBar(content: Text("Got answer")),
       );
     }
   }
