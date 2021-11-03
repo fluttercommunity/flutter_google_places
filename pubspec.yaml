@@ -11,10 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  google_api_headers: ^1.0.0
-  google_maps_webservice: ^0.0.20-nullsafety.3
-  http: ^0.13.1
-  rxdart: ^0.26.0
+  google_api_headers: ^1.1.1
+  google_maps_webservice: ^0.0.20-nullsafety.5
+  http: ^0.13.4
+  rxdart: ^0.27.2
 
 dev_dependencies:
   flutter_test:
