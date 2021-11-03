@@ -74,8 +74,6 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       context.findAncestorStateOfType<PlacesAutocompleteState>();
 }
 
-
-
 class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
@@ -121,9 +119,9 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                 ),
                 Expanded(
                     child: Padding(
-                      child: _textField(context),
-                      padding: const EdgeInsets.only(right: 8.0),
-                    )),
+                  child: _textField(context),
+                  padding: const EdgeInsets.only(right: 8.0),
+                )),
               ],
             )),
         const Divider()
@@ -166,14 +164,11 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
             child: ListBody(
               children: _response!.predictions
                   .map(
-                    (p) =>
-                    PredictionTile(
+                    (p) => PredictionTile(
                       prediction: p,
-                      onTap: Navigator
-                          .of(context)
-                          .pop,
+                      onTap: Navigator.of(context).pop,
                     ),
-              )
+                  )
                   .toList(),
             ),
           ),
@@ -187,9 +182,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
             Padding(padding: const EdgeInsets.only(top: 48.0), child: body),
           ]));
 
-      if (Theme
-          .of(context)
-          .platform == TargetPlatform.iOS) {
+      if (Theme.of(context).platform == TargetPlatform.iOS) {
         return Padding(
             padding: const EdgeInsets.only(top: 8.0), child: container);
       }
@@ -236,7 +229,8 @@ class PlacesAutocompleteResult extends StatefulWidget {
   final ValueChanged<Prediction>? onTap;
   final Widget? logo;
 
-  const PlacesAutocompleteResult({Key? key, this.onTap, this.logo}) : super(key: key);
+  const PlacesAutocompleteResult({Key? key, this.onTap, this.logo})
+      : super(key: key);
 
   @override
   _PlacesAutocompleteResult createState() => _PlacesAutocompleteResult();
@@ -349,7 +343,8 @@ class PredictionsListView extends StatelessWidget {
   final List<Prediction> predictions;
   final ValueChanged<Prediction>? onTap;
 
-  const PredictionsListView({Key? key, required this.predictions, this.onTap}) : super(key: key);
+  const PredictionsListView({Key? key, required this.predictions, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +360,8 @@ class PredictionTile extends StatelessWidget {
   final Prediction prediction;
   final ValueChanged<Prediction>? onTap;
 
-  const PredictionTile({Key? key, required this.prediction, this.onTap}) : super(key: key);
+  const PredictionTile({Key? key, required this.prediction, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

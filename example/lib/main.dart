@@ -137,7 +137,8 @@ Future<void> displayPrediction(Prediction? p, BuildContext context) async {
       apiKey: kGoogleApiKey,
       apiHeaders: await const GoogleApiHeaders().getHeaders(),
     );
-    PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId!);
+    PlacesDetailsResponse detail =
+        await _places.getDetailsByPlaceId(p.placeId!);
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
 
@@ -152,7 +153,8 @@ Future<void> displayPrediction(Prediction? p, BuildContext context) async {
 // and your state [GooglePlacesAutocompleteState]
 class CustomSearchScaffold extends PlacesAutocompleteWidget {
   CustomSearchScaffold({Key? key})
-      : super(key: key,
+      : super(
+          key: key,
           apiKey: kGoogleApiKey,
           sessionToken: Uuid().generateV4(),
           language: "en",
