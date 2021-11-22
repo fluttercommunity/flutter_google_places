@@ -13,7 +13,7 @@ dependencies:
 
   google_api_headers: ^1.0.0
   google_maps_webservice: ^0.0.20-nullsafety.3
-  http: ^0.13.1
+  http: ^0.13.4
   rxdart: ^0.26.0
 
 dev_dependencies:
