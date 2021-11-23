@@ -1,8 +1,9 @@
 ## 0.3.1
 
-- Update dependencies
-- Upgrade example app to null-safety
-- Migrate deprecated functions
+- Fixed null-pointer which caused the package to crash.
+- Upgrade example app to null safety
+- Applied flutter lints recommendations
+- Upgraded dependencies
 
 ## 0.3.0
 
