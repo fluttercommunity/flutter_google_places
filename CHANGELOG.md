@@ -1,3 +1,9 @@
+## 0.3.1
+
+- Update dependencies
+- Upgrade example app to null-safety
+- Migrate deprecated functions
+
 ## 0.3.0
 
 - Update packages
