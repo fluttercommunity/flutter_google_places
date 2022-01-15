@@ -2,7 +2,6 @@ library flutter_google_places.src;
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -458,8 +457,8 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void dispose() {
     super.dispose();
 
-    _places!.dispose();
-    _debounce!.cancel();
+    _places?.dispose();
+    _debounce?.cancel();
     _queryBehavior.close();
     _queryTextController!.removeListener(_onQueryChange);
   }
