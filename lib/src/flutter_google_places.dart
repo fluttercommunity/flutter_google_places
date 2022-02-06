@@ -28,6 +28,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final int debounce;
   final InputDecoration? decoration;
   final TextStyle? textStyle;
+  final ThemeData? themeData;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -65,6 +66,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.debounce = 300,
     this.decoration,
     this.textStyle,
+    this.themeData,
   }) : super(key: key);
 
   @override
@@ -78,21 +80,23 @@ class PlacesAutocompleteWidget extends StatefulWidget {
 class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
+    final theme = widget.themeData ?? Theme.of(context);
     if (widget.mode == Mode.fullscreen) {
-      return Scaffold(
-          appBar: AppBar(
-            title: AppBarPlacesAutoCompleteTextField(
-              textDecoration: widget.decoration,
-              textStyle: widget.textStyle,
+      return Theme(
+        data: theme,
+        child: Scaffold(
+            appBar: AppBar(
+              title: AppBarPlacesAutoCompleteTextField(
+                textDecoration: widget.decoration,
+                textStyle: widget.textStyle,
+              ),
             ),
-          ),
-          body: PlacesAutocompleteResult(
-            onTap: Navigator.of(context).pop,
-            logo: widget.logo,
-          ));
+            body: PlacesAutocompleteResult(
+              onTap: Navigator.of(context).pop,
+              logo: widget.logo,
+            )),
+      );
     } else {
-      final theme = Theme.of(context);
-
       final headerTopLeftBorderRadius = widget.overlayBorderRadius != null
           ? widget.overlayBorderRadius!.topLeft
           : const Radius.circular(2);
@@ -513,6 +517,7 @@ class PlacesAutocomplete {
     InputDecoration? decoration,
     String startText = "",
     TextStyle? textStyle,
+    ThemeData? themeData,
   }) {
     builder(BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
@@ -535,6 +540,7 @@ class PlacesAutocomplete {
           startText: startText,
           decoration: decoration,
           textStyle: textStyle,
+          themeData: themeData,
         );
 
     if (mode == Mode.overlay) {
