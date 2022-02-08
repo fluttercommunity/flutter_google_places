@@ -373,7 +373,10 @@ class PredictionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.location_on),
-      title: Text(prediction.description!),
+      title: Text(
+        prediction.description!,
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
       onTap: () {
         if (onTap != null) {
           onTap!(prediction);
