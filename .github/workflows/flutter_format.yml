@@ -11,7 +11,7 @@ jobs:
         with:
           java-version: '12.x'
       # Use the community Action to install Flutter
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2.3.0
       - name: Version
         run: flutter doctor -v
       - name: Install dependencies
