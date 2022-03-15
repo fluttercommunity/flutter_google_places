@@ -6,6 +6,8 @@
 
 This library provides Google places autocomplete widgets for flutter. It uses [google_maps_webservice](https://github.com/lejard-h/google_maps_webservice) library which directly refer to the official [documentation](https://developers.google.com/maps/web-services/) for google maps web service. 
 
+According to https://stackoverflow.com/a/52545293, you need to enable billing on your account, even if you are only using the free quota.
+
 
 ## Installation
 
