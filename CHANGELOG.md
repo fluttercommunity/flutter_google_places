@@ -1,3 +1,8 @@
+## 0.3.2
+
+- Updated google_api_headers to 1.2.0
+
+
 ## 0.3.1
 
 - Fixed null-pointer which caused the package to crash.
