@@ -519,36 +519,47 @@ class PlacesAutocomplete {
     Client? httpClient,
     InputDecoration? decoration,
     String startText = "",
+    Duration transitionDuration = const Duration(seconds: 300),
     TextStyle? textStyle,
     ThemeData? themeData,
   }) {
-    builder(BuildContext ctx) => PlacesAutocompleteWidget(
-          apiKey: apiKey,
-          mode: mode,
-          overlayBorderRadius: overlayBorderRadius,
-          language: language,
-          sessionToken: sessionToken,
-          components: components,
-          types: types,
-          location: location,
-          radius: radius,
-          strictbounds: strictbounds,
-          region: region,
-          offset: offset,
-          hint: hint,
-          logo: logo,
-          onError: onError,
-          proxyBaseUrl: proxyBaseUrl,
-          httpClient: httpClient as BaseClient?,
-          startText: startText,
-          decoration: decoration,
-          textStyle: textStyle,
-          themeData: themeData,
-        );
+    final autoCompleteWidget = PlacesAutocompleteWidget(
+      apiKey: apiKey,
+      mode: mode,
+      overlayBorderRadius: overlayBorderRadius,
+      language: language,
+      sessionToken: sessionToken,
+      components: components,
+      types: types,
+      location: location,
+      radius: radius,
+      strictbounds: strictbounds,
+      region: region,
+      offset: offset,
+      hint: hint,
+      logo: logo,
+      onError: onError,
+      proxyBaseUrl: proxyBaseUrl,
+      httpClient: httpClient as BaseClient?,
+      startText: startText,
+      decoration: decoration,
+      textStyle: textStyle,
+      themeData: themeData,
+    );
 
     if (mode == Mode.overlay) {
-      return showDialog(context: context, builder: builder);
+      return showDialog(
+        context: context,
+        builder: (BuildContext ctx) => autoCompleteWidget,
+      );
+    } else {
+      return Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => autoCompleteWidget,
+          transitionDuration: transitionDuration,
+        ),
+      );
     }
-    return Navigator.push(context, MaterialPageRoute(builder: builder));
   }
 }
