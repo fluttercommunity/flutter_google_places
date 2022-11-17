@@ -57,6 +57,7 @@ class PlacesAutocompleteField extends StatefulWidget {
     this.onSelected,
     this.onError,
     this.inputDecoration = const InputDecoration(),
+    this.overlayBorderRadius,
   }) : super(key: key);
 
   /// Controls the text being edited.
@@ -134,6 +135,7 @@ class PlacesAutocompleteField extends StatefulWidget {
   /// Callback when autocomplete has error.
   final ValueChanged<PlacesAutocompleteResponse>? onError;
 
+  final BorderRadius? overlayBorderRadius;
   @override
   _LocationAutocompleteFieldState createState() =>
       _LocationAutocompleteFieldState();
@@ -178,6 +180,7 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
         radius: widget.radius,
         types: widget.types,
         strictbounds: widget.strictbounds,
+        overlayBorderRadius: widget.overlayBorderRadius,
       );
 
   void _handleTap() async {
