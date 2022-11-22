@@ -43,6 +43,12 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// or custom configuration
   final BaseClient? httpClient;
 
+
+  /// optional - set 'resultTextStyle' value in google_maps_webservice
+  ///
+  /// In case of changing the default text style of result's text
+  final TextStyle? resultTextStyle;
+
   const PlacesAutocompleteWidget({
     required this.apiKey,
     this.mode = Mode.fullscreen,
@@ -67,6 +73,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.decoration,
     this.textStyle,
     this.themeData,
+    this.resultTextStyle,
   }) : super(key: key);
 
   @override
@@ -94,6 +101,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
             body: PlacesAutocompleteResult(
               onTap: Navigator.of(context).pop,
               logo: widget.logo,
+              resultTextStyle: widget.resultTextStyle,
             )),
       );
     } else {
@@ -173,6 +181,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                     (p) => PredictionTile(
                       prediction: p,
                       onTap: Navigator.of(context).pop,
+                      resultTextStyle: widget.resultTextStyle,
                     ),
                   )
                   .toList(),
@@ -234,9 +243,14 @@ class _Loader extends StatelessWidget {
 class PlacesAutocompleteResult extends StatefulWidget {
   final ValueChanged<Prediction>? onTap;
   final Widget? logo;
+  final TextStyle? resultTextStyle;
 
-  const PlacesAutocompleteResult({Key? key, this.onTap, this.logo})
-      : super(key: key);
+  const PlacesAutocompleteResult({
+    Key? key,
+    this.onTap,
+    this.logo,
+    this.resultTextStyle,
+  }) : super(key: key);
 
   @override
   _PlacesAutocompleteResult createState() => _PlacesAutocompleteResult();
@@ -260,6 +274,7 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
     return PredictionsListView(
       predictions: state._response!.predictions,
       onTap: widget.onTap,
+      resultTextStyle: widget.resultTextStyle,
     );
   }
 }
@@ -348,15 +363,24 @@ class PoweredByGoogleImage extends StatelessWidget {
 class PredictionsListView extends StatelessWidget {
   final List<Prediction> predictions;
   final ValueChanged<Prediction>? onTap;
+  final TextStyle? resultTextStyle;
 
-  const PredictionsListView({Key? key, required this.predictions, this.onTap})
-      : super(key: key);
+  const PredictionsListView({
+    Key? key,
+    required this.predictions,
+    this.onTap,
+    this.resultTextStyle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: predictions
-          .map((Prediction p) => PredictionTile(prediction: p, onTap: onTap))
+          .map((Prediction p) => PredictionTile(
+                prediction: p,
+                onTap: onTap,
+                resultTextStyle: resultTextStyle,
+              ))
           .toList(),
     );
   }
@@ -365,9 +389,14 @@ class PredictionsListView extends StatelessWidget {
 class PredictionTile extends StatelessWidget {
   final Prediction prediction;
   final ValueChanged<Prediction>? onTap;
+  final TextStyle? resultTextStyle;
 
-  const PredictionTile({Key? key, required this.prediction, this.onTap})
-      : super(key: key);
+  const PredictionTile({
+    Key? key,
+    required this.prediction,
+    this.onTap,
+    this.resultTextStyle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -375,7 +404,7 @@ class PredictionTile extends StatelessWidget {
       leading: const Icon(Icons.location_on),
       title: Text(
         prediction.description!,
-        style: Theme.of(context).textTheme.bodyText2,
+        style: resultTextStyle ?? Theme.of(context).textTheme.bodyMedium,
       ),
       onTap: () {
         if (onTap != null) {
@@ -522,6 +551,7 @@ class PlacesAutocomplete {
     Duration transitionDuration = const Duration(seconds: 300),
     TextStyle? textStyle,
     ThemeData? themeData,
+    TextStyle? resultTextStyle,
   }) {
     final autoCompleteWidget = PlacesAutocompleteWidget(
       apiKey: apiKey,
@@ -545,6 +575,7 @@ class PlacesAutocomplete {
       decoration: decoration,
       textStyle: textStyle,
       themeData: themeData,
+      resultTextStyle: resultTextStyle,
     );
 
     if (mode == Mode.overlay) {
