@@ -470,7 +470,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     _places?.dispose();
     _debounce?.cancel();
     _queryBehavior.close();
-    _queryTextController!.removeListener(_onQueryChange);
+    _queryTextController?.removeListener(_onQueryChange);
   }
 
   @mustCallSuper
