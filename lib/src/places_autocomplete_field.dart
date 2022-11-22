@@ -57,6 +57,9 @@ class PlacesAutocompleteField extends StatefulWidget {
     this.onSelected,
     this.onError,
     this.inputDecoration = const InputDecoration(),
+    this.overlayBorderRadius,
+    this.textStyle,
+    this.textStyleFormField,
   }) : super(key: key);
 
   /// Controls the text being edited.
@@ -134,6 +137,12 @@ class PlacesAutocompleteField extends StatefulWidget {
   /// Callback when autocomplete has error.
   final ValueChanged<PlacesAutocompleteResponse>? onError;
 
+  final BorderRadius? overlayBorderRadius;
+
+  final TextStyle? textStyle;
+
+  final TextStyle? textStyleFormField;
+
   @override
   _LocationAutocompleteFieldState createState() =>
       _LocationAutocompleteFieldState();
@@ -178,6 +187,8 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
         radius: widget.radius,
         types: widget.types,
         strictbounds: widget.strictbounds,
+        overlayBorderRadius: widget.overlayBorderRadius,
+        textStyle: widget.textStyle,
       );
 
   void _handleTap() async {
@@ -201,13 +212,14 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
     final TextEditingController controller = _effectiveController!;
 
     var text = controller.text.isNotEmpty
-        ? Text(
-            controller.text,
+        ? Text(controller.text,
             softWrap: true,
-          )
+            style: widget.textStyleFormField ??
+                const TextStyle(color: Colors.black38))
         : Text(
             widget.hint,
-            style: const TextStyle(color: Colors.black38),
+            style: widget.textStyleFormField ??
+                const TextStyle(color: Colors.black38),
           );
 
     Widget child = Row(
