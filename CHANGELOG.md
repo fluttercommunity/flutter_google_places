@@ -1,3 +1,12 @@
+## 0.4.0
+New Features:
+- Add textStyle and borderRadius fields to PlacesAutocompleteField() 
+- Add resultTextStyle to PlacesAutocompleteWidget()
+
+Other improvements:
+- Migrated flutter_lints to lint and applied all suggestions.
+- Updated rxdart to latest version.
+
 ## 0.3.2
 
 - Updated google_api_headers to 1.2.0
