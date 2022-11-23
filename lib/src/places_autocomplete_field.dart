@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/src/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
-
-import 'flutter_google_places.dart';
 
 /// A text field like widget to input places with autocomplete.
 ///
@@ -144,11 +143,11 @@ class PlacesAutocompleteField extends StatefulWidget {
   final TextStyle? textStyleFormField;
 
   @override
-  _LocationAutocompleteFieldState createState() =>
-      _LocationAutocompleteFieldState();
+  LocationAutocompleteFieldState createState() =>
+      LocationAutocompleteFieldState();
 }
 
-class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
+class LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
   TextEditingController? _controller;
   TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
@@ -191,19 +190,15 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
         textStyle: widget.textStyle,
       );
 
-  void _handleTap() async {
-    Prediction? p = await _showAutocomplete();
+  Future<void> _handleTap() async {
+    final Prediction? p = await _showAutocomplete();
 
     if (p == null) return;
 
     setState(() {
       _effectiveController!.text = p.description!;
-      if (widget.onChanged != null) {
-        widget.onChanged!(p.description);
-      }
-      if (widget.onSelected != null) {
-        widget.onSelected!(p);
-      }
+      widget.onChanged?.call(p.description);
+      widget.onSelected?.call(p);
     });
   }
 
@@ -211,11 +206,13 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
   Widget build(BuildContext context) {
     final TextEditingController controller = _effectiveController!;
 
-    var text = controller.text.isNotEmpty
-        ? Text(controller.text,
+    final text = controller.text.isNotEmpty
+        ? Text(
+            controller.text,
             softWrap: true,
             style: widget.textStyleFormField ??
-                const TextStyle(color: Colors.black38))
+                const TextStyle(color: Colors.black38),
+          )
         : Text(
             widget.hint,
             style: widget.textStyleFormField ??
@@ -231,17 +228,18 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
         Expanded(
           child: text,
         ),
-        widget.trailing != null
-            ? GestureDetector(
-                onTap: widget.trailingOnTap,
-                child: widget.trailingOnTap != null
-                    ? widget.trailing
-                    : Icon(
-                        widget.trailing!.icon,
-                        color: Colors.grey,
-                      ),
-              )
-            : const SizedBox()
+        if (widget.trailing != null)
+          GestureDetector(
+            onTap: widget.trailingOnTap,
+            child: widget.trailingOnTap != null
+                ? widget.trailing
+                : Icon(
+                    widget.trailing!.icon,
+                    color: Colors.grey,
+                  ),
+          )
+        else
+          const SizedBox()
       ],
     );
 
