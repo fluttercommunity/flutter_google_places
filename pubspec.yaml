@@ -16,9 +16,9 @@ dependencies:
   rxdart: ^0.27.5
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  lint: ^1.10.0
 
 flutter:
   assets:

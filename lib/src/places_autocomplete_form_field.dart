@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/src/flutter_google_places.dart';
+import 'package:flutter_google_places/src/places_autocomplete_field.dart';
 import 'package:google_maps_webservice/places.dart';
-
-import 'flutter_google_places.dart';
-import 'places_autocomplete_field.dart';
 
 /// A [FormField] that contains a [PlacesAutocompleteField].
 ///
@@ -74,13 +73,13 @@ class PlacesAutocompleteFormField extends FormField<String> {
           validator: validator,
           autovalidateMode: autovalidateMode,
           builder: (FormFieldState<String> field) {
-            final _TextFormFieldState state = field as _TextFormFieldState;
-            final InputDecoration? effectiveDecoration = inputDecoration
+            final TextFormFieldState state = field as TextFormFieldState;
+            final InputDecoration effectiveDecoration = inputDecoration
                 .applyDefaults(Theme.of(state.context).inputDecorationTheme);
             return PlacesAutocompleteField(
               key: key,
               inputDecoration:
-                  effectiveDecoration?.copyWith(errorText: state.errorText),
+                  effectiveDecoration.copyWith(errorText: state.errorText),
               controller: state._effectiveController,
               apiKey: apiKey,
               leading: leading,
@@ -109,10 +108,10 @@ class PlacesAutocompleteFormField extends FormField<String> {
   final TextEditingController? controller;
 
   @override
-  _TextFormFieldState createState() => _TextFormFieldState();
+  TextFormFieldState createState() => TextFormFieldState();
 }
 
-class _TextFormFieldState extends FormFieldState<String> {
+class TextFormFieldState extends FormFieldState<String> {
   TextEditingController? _controller;
 
   TextEditingController? get _effectiveController =>
