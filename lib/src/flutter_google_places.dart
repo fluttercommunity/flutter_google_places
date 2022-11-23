@@ -85,16 +85,17 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       return Theme(
         data: theme,
         child: Scaffold(
-            appBar: AppBar(
-              title: AppBarPlacesAutoCompleteTextField(
-                textDecoration: widget.decoration,
-                textStyle: widget.textStyle,
-              ),
+          appBar: AppBar(
+            title: AppBarPlacesAutoCompleteTextField(
+              textDecoration: widget.decoration,
+              textStyle: widget.textStyle,
             ),
-            body: PlacesAutocompleteResult(
-              onTap: Navigator.of(context).pop,
-              logo: widget.logo,
-            )),
+          ),
+          body: PlacesAutocompleteResult(
+            onTap: Navigator.of(context).pop,
+            logo: widget.logo,
+          ),
+        ),
       );
     } else {
       final headerTopLeftBorderRadius = widget.overlayBorderRadius != null
@@ -105,12 +106,14 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           ? widget.overlayBorderRadius!.topRight
           : const Radius.circular(2);
 
-      final header = Column(children: <Widget>[
-        Material(
+      final header = Column(
+        children: <Widget>[
+          Material(
             color: theme.dialogBackgroundColor,
             borderRadius: BorderRadius.only(
-                topLeft: headerTopLeftBorderRadius,
-                topRight: headerTopRightBorderRadius),
+              topLeft: headerTopLeftBorderRadius,
+              topRight: headerTopRightBorderRadius,
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -124,14 +127,17 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                   },
                 ),
                 Expanded(
-                    child: Padding(
-                  child: _textField(context),
-                  padding: const EdgeInsets.only(right: 8.0),
-                )),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: _textField(context),
+                  ),
+                ),
               ],
-            )),
-        const Divider()
-      ]);
+            ),
+          ),
+          const Divider()
+        ],
+      );
 
       Widget body;
 
@@ -145,19 +151,19 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
 
       if (_searching) {
         body = Stack(
-          children: <Widget>[_Loader()],
           alignment: FractionalOffset.bottomCenter,
+          children: <Widget>[_Loader()],
         );
       } else if (_queryTextController!.text.isEmpty ||
           _response == null ||
           _response!.predictions.isEmpty) {
         body = Material(
           color: theme.dialogBackgroundColor,
-          child: widget.logo ?? const PoweredByGoogleImage(),
           borderRadius: BorderRadius.only(
             bottomLeft: bodyBottomLeftBorderRadius,
             bottomRight: bodyBottomRightBorderRadius,
           ),
+          child: widget.logo ?? const PoweredByGoogleImage(),
         );
       } else {
         body = SingleChildScrollView(
@@ -182,15 +188,20 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       }
 
       final container = Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
-          child: Stack(children: <Widget>[
+        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+        child: Stack(
+          children: <Widget>[
             header,
             Padding(padding: const EdgeInsets.only(top: 48.0), child: body),
-          ]));
+          ],
+        ),
+      );
 
       if (Theme.of(context).platform == TargetPlatform.iOS) {
         return Padding(
-            padding: const EdgeInsets.only(top: 8.0), child: container);
+          padding: const EdgeInsets.only(top: 8.0),
+          child: container,
+        );
       }
       return container;
     }
@@ -204,10 +215,11 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
         controller: _queryTextController,
         autofocus: true,
         style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black87
-                : null,
-            fontSize: 16.0),
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.black87
+              : null,
+          fontSize: 16.0,
+        ),
         decoration: widget.decoration ??
             InputDecoration(
               hintText: widget.hint,
@@ -226,8 +238,9 @@ class _Loader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: const BoxConstraints(maxHeight: 2.0),
-        child: const LinearProgressIndicator());
+      constraints: const BoxConstraints(maxHeight: 2.0),
+      child: const LinearProgressIndicator(),
+    );
   }
 }
 
@@ -239,10 +252,11 @@ class PlacesAutocompleteResult extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PlacesAutocompleteResult createState() => _PlacesAutocompleteResult();
+  PlacesAutocompleteResultState createState() =>
+      PlacesAutocompleteResultState();
 }
 
-class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
+class PlacesAutocompleteResultState extends State<PlacesAutocompleteResult> {
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context)!;
@@ -268,31 +282,34 @@ class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
   final InputDecoration? textDecoration;
   final TextStyle? textStyle;
 
-  const AppBarPlacesAutoCompleteTextField(
-      {Key? key, this.textDecoration, this.textStyle})
-      : super(key: key);
+  const AppBarPlacesAutoCompleteTextField({
+    Key? key,
+    this.textDecoration,
+    this.textStyle,
+  }) : super(key: key);
 
   @override
-  _AppBarPlacesAutoCompleteTextFieldState createState() =>
-      _AppBarPlacesAutoCompleteTextFieldState();
+  AppBarPlacesAutoCompleteTextFieldState createState() =>
+      AppBarPlacesAutoCompleteTextFieldState();
 }
 
-class _AppBarPlacesAutoCompleteTextFieldState
+class AppBarPlacesAutoCompleteTextFieldState
     extends State<AppBarPlacesAutoCompleteTextField> {
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context)!;
 
     return Container(
-        alignment: Alignment.topLeft,
-        margin: const EdgeInsets.only(top: 4.0),
-        child: TextField(
-          controller: state._queryTextController,
-          autofocus: true,
-          style: widget.textStyle ?? _defaultStyle(),
-          decoration:
-              widget.textDecoration ?? _defaultDecoration(state.widget.hint),
-        ));
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.only(top: 4.0),
+      child: TextField(
+        controller: state._queryTextController,
+        autofocus: true,
+        style: widget.textStyle ?? _defaultStyle(),
+        decoration:
+            widget.textDecoration ?? _defaultDecoration(state.widget.hint),
+      ),
+    );
   }
 
   InputDecoration _defaultDecoration(String hint) {
@@ -323,25 +340,29 @@ class _AppBarPlacesAutoCompleteTextFieldState
 }
 
 class PoweredByGoogleImage extends StatelessWidget {
-  final _poweredByGoogleWhite =
+  static const _poweredByGoogleWhite =
       "packages/flutter_google_places/assets/google_white.png";
-  final _poweredByGoogleBlack =
+  static const _poweredByGoogleBlack =
       "packages/flutter_google_places/assets/google_black.png";
 
   const PoweredByGoogleImage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      Padding(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
           padding: const EdgeInsets.all(16.0),
           child: Image.asset(
             Theme.of(context).brightness == Brightness.light
                 ? _poweredByGoogleWhite
                 : _poweredByGoogleBlack,
             scale: 2.5,
-          ))
-    ]);
+          ),
+        )
+      ],
+    );
   }
 }
 
@@ -378,9 +399,7 @@ class PredictionTile extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyText2,
       ),
       onTap: () {
-        if (onTap != null) {
-          onTap!(prediction);
-        }
+        onTap?.call(prediction);
       },
     );
   }
@@ -477,9 +496,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void onResponseError(PlacesAutocompleteResponse res) {
     if (!mounted) return;
 
-    if (widget.onError != null) {
-      widget.onError!(res);
-    }
+    widget.onError?.call(res);
     setState(() {
       _response = null;
       _searching = false;
@@ -522,7 +539,8 @@ class PlacesAutocomplete {
     TextStyle? textStyle,
     ThemeData? themeData,
   }) {
-    builder(BuildContext ctx) => PlacesAutocompleteWidget(
+    PlacesAutocompleteWidget builder(BuildContext ctx) =>
+        PlacesAutocompleteWidget(
           apiKey: apiKey,
           mode: mode,
           overlayBorderRadius: overlayBorderRadius,
