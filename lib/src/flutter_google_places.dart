@@ -43,6 +43,12 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// or custom configuration
   final BaseClient? httpClient;
 
+
+  /// optional - set 'resultTextStyle' value in google_maps_webservice
+  ///
+  /// In case of changing the default text style of result's text
+  final TextStyle? resultTextStyle;
+
   const PlacesAutocompleteWidget({
     required this.apiKey,
     this.mode = Mode.fullscreen,
@@ -67,6 +73,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.decoration,
     this.textStyle,
     this.themeData,
+    this.resultTextStyle,
   }) : super(key: key);
 
   @override
@@ -85,17 +92,17 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       return Theme(
         data: theme,
         child: Scaffold(
-          appBar: AppBar(
-            title: AppBarPlacesAutoCompleteTextField(
-              textDecoration: widget.decoration,
-              textStyle: widget.textStyle,
+            appBar: AppBar(
+              title: AppBarPlacesAutoCompleteTextField(
+                textDecoration: widget.decoration,
+                textStyle: widget.textStyle,
+              ),
             ),
-          ),
-          body: PlacesAutocompleteResult(
-            onTap: Navigator.of(context).pop,
-            logo: widget.logo,
-          ),
-        ),
+            body: PlacesAutocompleteResult(
+              onTap: Navigator.of(context).pop,
+              logo: widget.logo,
+              resultTextStyle: widget.resultTextStyle,
+            )),
       );
     } else {
       final headerTopLeftBorderRadius = widget.overlayBorderRadius != null
@@ -106,14 +113,12 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           ? widget.overlayBorderRadius!.topRight
           : const Radius.circular(2);
 
-      final header = Column(
-        children: <Widget>[
-          Material(
+      final header = Column(children: <Widget>[
+        Material(
             color: theme.dialogBackgroundColor,
             borderRadius: BorderRadius.only(
-              topLeft: headerTopLeftBorderRadius,
-              topRight: headerTopRightBorderRadius,
-            ),
+                topLeft: headerTopLeftBorderRadius,
+                topRight: headerTopRightBorderRadius),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -127,17 +132,14 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                   },
                 ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: _textField(context),
-                  ),
-                ),
+                    child: Padding(
+                  child: _textField(context),
+                  padding: const EdgeInsets.only(right: 8.0),
+                )),
               ],
-            ),
-          ),
-          const Divider()
-        ],
-      );
+            )),
+        const Divider()
+      ]);
 
       Widget body;
 
@@ -151,19 +153,19 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
 
       if (_searching) {
         body = Stack(
-          alignment: FractionalOffset.bottomCenter,
           children: <Widget>[_Loader()],
+          alignment: FractionalOffset.bottomCenter,
         );
       } else if (_queryTextController!.text.isEmpty ||
           _response == null ||
           _response!.predictions.isEmpty) {
         body = Material(
           color: theme.dialogBackgroundColor,
+          child: widget.logo ?? const PoweredByGoogleImage(),
           borderRadius: BorderRadius.only(
             bottomLeft: bodyBottomLeftBorderRadius,
             bottomRight: bodyBottomRightBorderRadius,
           ),
-          child: widget.logo ?? const PoweredByGoogleImage(),
         );
       } else {
         body = SingleChildScrollView(
@@ -179,6 +181,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                     (p) => PredictionTile(
                       prediction: p,
                       onTap: Navigator.of(context).pop,
+                      resultTextStyle: widget.resultTextStyle,
                     ),
                   )
                   .toList(),
@@ -188,20 +191,15 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       }
 
       final container = Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
-        child: Stack(
-          children: <Widget>[
+          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+          child: Stack(children: <Widget>[
             header,
             Padding(padding: const EdgeInsets.only(top: 48.0), child: body),
-          ],
-        ),
-      );
+          ]));
 
       if (Theme.of(context).platform == TargetPlatform.iOS) {
         return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: container,
-        );
+            padding: const EdgeInsets.only(top: 8.0), child: container);
       }
       return container;
     }
@@ -214,12 +212,12 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   Widget _textField(BuildContext context) => TextField(
         controller: _queryTextController,
         autofocus: true,
-        style: TextStyle(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black87
-              : null,
-          fontSize: 16.0,
-        ),
+        style: widget.textStyle ??
+            TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black87
+                    : null,
+                fontSize: 16.0),
         decoration: widget.decoration ??
             InputDecoration(
               hintText: widget.hint,
@@ -238,25 +236,28 @@ class _Loader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(maxHeight: 2.0),
-      child: const LinearProgressIndicator(),
-    );
+        constraints: const BoxConstraints(maxHeight: 2.0),
+        child: const LinearProgressIndicator());
   }
 }
 
 class PlacesAutocompleteResult extends StatefulWidget {
   final ValueChanged<Prediction>? onTap;
   final Widget? logo;
+  final TextStyle? resultTextStyle;
 
-  const PlacesAutocompleteResult({Key? key, this.onTap, this.logo})
-      : super(key: key);
+  const PlacesAutocompleteResult({
+    Key? key,
+    this.onTap,
+    this.logo,
+    this.resultTextStyle,
+  }) : super(key: key);
 
   @override
-  PlacesAutocompleteResultState createState() =>
-      PlacesAutocompleteResultState();
+  _PlacesAutocompleteResult createState() => _PlacesAutocompleteResult();
 }
 
-class PlacesAutocompleteResultState extends State<PlacesAutocompleteResult> {
+class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context)!;
@@ -274,6 +275,7 @@ class PlacesAutocompleteResultState extends State<PlacesAutocompleteResult> {
     return PredictionsListView(
       predictions: state._response!.predictions,
       onTap: widget.onTap,
+      resultTextStyle: widget.resultTextStyle,
     );
   }
 }
@@ -282,34 +284,31 @@ class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
   final InputDecoration? textDecoration;
   final TextStyle? textStyle;
 
-  const AppBarPlacesAutoCompleteTextField({
-    Key? key,
-    this.textDecoration,
-    this.textStyle,
-  }) : super(key: key);
+  const AppBarPlacesAutoCompleteTextField(
+      {Key? key, this.textDecoration, this.textStyle})
+      : super(key: key);
 
   @override
-  AppBarPlacesAutoCompleteTextFieldState createState() =>
-      AppBarPlacesAutoCompleteTextFieldState();
+  _AppBarPlacesAutoCompleteTextFieldState createState() =>
+      _AppBarPlacesAutoCompleteTextFieldState();
 }
 
-class AppBarPlacesAutoCompleteTextFieldState
+class _AppBarPlacesAutoCompleteTextFieldState
     extends State<AppBarPlacesAutoCompleteTextField> {
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context)!;
 
     return Container(
-      alignment: Alignment.topLeft,
-      margin: const EdgeInsets.only(top: 4.0),
-      child: TextField(
-        controller: state._queryTextController,
-        autofocus: true,
-        style: widget.textStyle ?? _defaultStyle(),
-        decoration:
-            widget.textDecoration ?? _defaultDecoration(state.widget.hint),
-      ),
-    );
+        alignment: Alignment.topLeft,
+        margin: const EdgeInsets.only(top: 4.0),
+        child: TextField(
+          controller: state._queryTextController,
+          autofocus: true,
+          style: widget.textStyle ?? _defaultStyle(),
+          decoration:
+              widget.textDecoration ?? _defaultDecoration(state.widget.hint),
+        ));
   }
 
   InputDecoration _defaultDecoration(String hint) {
@@ -340,44 +339,49 @@ class AppBarPlacesAutoCompleteTextFieldState
 }
 
 class PoweredByGoogleImage extends StatelessWidget {
-  static const _poweredByGoogleWhite =
+  final _poweredByGoogleWhite =
       "packages/flutter_google_places/assets/google_white.png";
-  static const _poweredByGoogleBlack =
+  final _poweredByGoogleBlack =
       "packages/flutter_google_places/assets/google_black.png";
 
   const PoweredByGoogleImage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      Padding(
           padding: const EdgeInsets.all(16.0),
           child: Image.asset(
             Theme.of(context).brightness == Brightness.light
                 ? _poweredByGoogleWhite
                 : _poweredByGoogleBlack,
             scale: 2.5,
-          ),
-        )
-      ],
-    );
+          ))
+    ]);
   }
 }
 
 class PredictionsListView extends StatelessWidget {
   final List<Prediction> predictions;
   final ValueChanged<Prediction>? onTap;
+  final TextStyle? resultTextStyle;
 
-  const PredictionsListView({Key? key, required this.predictions, this.onTap})
-      : super(key: key);
+  const PredictionsListView({
+    Key? key,
+    required this.predictions,
+    this.onTap,
+    this.resultTextStyle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: predictions
-          .map((Prediction p) => PredictionTile(prediction: p, onTap: onTap))
+          .map((Prediction p) => PredictionTile(
+                prediction: p,
+                onTap: onTap,
+                resultTextStyle: resultTextStyle,
+              ))
           .toList(),
     );
   }
@@ -386,9 +390,14 @@ class PredictionsListView extends StatelessWidget {
 class PredictionTile extends StatelessWidget {
   final Prediction prediction;
   final ValueChanged<Prediction>? onTap;
+  final TextStyle? resultTextStyle;
 
-  const PredictionTile({Key? key, required this.prediction, this.onTap})
-      : super(key: key);
+  const PredictionTile({
+    Key? key,
+    required this.prediction,
+    this.onTap,
+    this.resultTextStyle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -396,10 +405,12 @@ class PredictionTile extends StatelessWidget {
       leading: const Icon(Icons.location_on),
       title: Text(
         prediction.description!,
-        style: Theme.of(context).textTheme.bodyText2,
+        style: resultTextStyle ?? Theme.of(context).textTheme.bodyMedium,
       ),
       onTap: () {
-        onTap?.call(prediction);
+        if (onTap != null) {
+          onTap!(prediction);
+        }
       },
     );
   }
@@ -496,7 +507,9 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void onResponseError(PlacesAutocompleteResponse res) {
     if (!mounted) return;
 
-    widget.onError?.call(res);
+    if (widget.onError != null) {
+      widget.onError!(res);
+    }
     setState(() {
       _response = null;
       _searching = false;
@@ -536,37 +549,49 @@ class PlacesAutocomplete {
     Client? httpClient,
     InputDecoration? decoration,
     String startText = "",
+    Duration transitionDuration = const Duration(seconds: 300),
     TextStyle? textStyle,
     ThemeData? themeData,
+    TextStyle? resultTextStyle,
   }) {
-    PlacesAutocompleteWidget builder(BuildContext ctx) =>
-        PlacesAutocompleteWidget(
-          apiKey: apiKey,
-          mode: mode,
-          overlayBorderRadius: overlayBorderRadius,
-          language: language,
-          sessionToken: sessionToken,
-          components: components,
-          types: types,
-          location: location,
-          radius: radius,
-          strictbounds: strictbounds,
-          region: region,
-          offset: offset,
-          hint: hint,
-          logo: logo,
-          onError: onError,
-          proxyBaseUrl: proxyBaseUrl,
-          httpClient: httpClient as BaseClient?,
-          startText: startText,
-          decoration: decoration,
-          textStyle: textStyle,
-          themeData: themeData,
-        );
+    final autoCompleteWidget = PlacesAutocompleteWidget(
+      apiKey: apiKey,
+      mode: mode,
+      overlayBorderRadius: overlayBorderRadius,
+      language: language,
+      sessionToken: sessionToken,
+      components: components,
+      types: types,
+      location: location,
+      radius: radius,
+      strictbounds: strictbounds,
+      region: region,
+      offset: offset,
+      hint: hint,
+      logo: logo,
+      onError: onError,
+      proxyBaseUrl: proxyBaseUrl,
+      httpClient: httpClient as BaseClient?,
+      startText: startText,
+      decoration: decoration,
+      textStyle: textStyle,
+      themeData: themeData,
+      resultTextStyle: resultTextStyle,
+    );
 
     if (mode == Mode.overlay) {
-      return showDialog(context: context, builder: builder);
+      return showDialog(
+        context: context,
+        builder: (BuildContext ctx) => autoCompleteWidget,
+      );
+    } else {
+      return Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => autoCompleteWidget,
+          transitionDuration: transitionDuration,
+        ),
+      );
     }
-    return Navigator.push(context, MaterialPageRoute(builder: builder));
   }
 }

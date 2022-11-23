@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/src/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
+
+import 'flutter_google_places.dart';
 
 /// A text field like widget to input places with autocomplete.
 ///
@@ -56,6 +57,9 @@ class PlacesAutocompleteField extends StatefulWidget {
     this.onSelected,
     this.onError,
     this.inputDecoration = const InputDecoration(),
+    this.overlayBorderRadius,
+    this.textStyle,
+    this.textStyleFormField,
   }) : super(key: key);
 
   /// Controls the text being edited.
@@ -133,12 +137,18 @@ class PlacesAutocompleteField extends StatefulWidget {
   /// Callback when autocomplete has error.
   final ValueChanged<PlacesAutocompleteResponse>? onError;
 
+  final BorderRadius? overlayBorderRadius;
+
+  final TextStyle? textStyle;
+
+  final TextStyle? textStyleFormField;
+
   @override
-  LocationAutocompleteFieldState createState() =>
-      LocationAutocompleteFieldState();
+  _LocationAutocompleteFieldState createState() =>
+      _LocationAutocompleteFieldState();
 }
 
-class LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
+class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
   TextEditingController? _controller;
   TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
@@ -177,17 +187,23 @@ class LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
         radius: widget.radius,
         types: widget.types,
         strictbounds: widget.strictbounds,
+        overlayBorderRadius: widget.overlayBorderRadius,
+        textStyle: widget.textStyle,
       );
 
-  Future<void> _handleTap() async {
-    final Prediction? p = await _showAutocomplete();
+  void _handleTap() async {
+    Prediction? p = await _showAutocomplete();
 
     if (p == null) return;
 
     setState(() {
       _effectiveController!.text = p.description!;
-      widget.onChanged?.call(p.description);
-      widget.onSelected?.call(p);
+      if (widget.onChanged != null) {
+        widget.onChanged!(p.description);
+      }
+      if (widget.onSelected != null) {
+        widget.onSelected!(p);
+      }
     });
   }
 
@@ -195,14 +211,15 @@ class LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
   Widget build(BuildContext context) {
     final TextEditingController controller = _effectiveController!;
 
-    final text = controller.text.isNotEmpty
-        ? Text(
-            controller.text,
+    var text = controller.text.isNotEmpty
+        ? Text(controller.text,
             softWrap: true,
-          )
+            style: widget.textStyleFormField ??
+                const TextStyle(color: Colors.black38))
         : Text(
             widget.hint,
-            style: const TextStyle(color: Colors.black38),
+            style: widget.textStyleFormField ??
+                const TextStyle(color: Colors.black38),
           );
 
     Widget child = Row(
@@ -214,18 +231,17 @@ class LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
         Expanded(
           child: text,
         ),
-        if (widget.trailing != null)
-          GestureDetector(
-            onTap: widget.trailingOnTap,
-            child: widget.trailingOnTap != null
-                ? widget.trailing
-                : Icon(
-                    widget.trailing!.icon,
-                    color: Colors.grey,
-                  ),
-          )
-        else
-          const SizedBox()
+        widget.trailing != null
+            ? GestureDetector(
+                onTap: widget.trailingOnTap,
+                child: widget.trailingOnTap != null
+                    ? widget.trailing
+                    : Icon(
+                        widget.trailing!.icon,
+                        color: Colors.grey,
+                      ),
+              )
+            : const SizedBox()
       ],
     );
 
