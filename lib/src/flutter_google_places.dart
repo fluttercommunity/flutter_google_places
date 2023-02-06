@@ -296,11 +296,15 @@ class PlacesAutocompleteResultState extends State<PlacesAutocompleteResult> {
 class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
   final InputDecoration? textDecoration;
   final TextStyle? textStyle;
+  final FocusNode? focusNode;
+  final bool autofocus;
 
   const AppBarPlacesAutoCompleteTextField({
     Key? key,
     this.textDecoration,
     this.textStyle,
+    this.focusNode,
+    this.autofocus = true,
   }) : super(key: key);
 
   @override
@@ -319,7 +323,8 @@ class AppBarPlacesAutoCompleteTextFieldState
       margin: const EdgeInsets.only(top: 4.0),
       child: TextField(
         controller: state._queryTextController,
-        autofocus: true,
+        autofocus: widget.autofocus,
+        focusNode: widget.focusNode,
         style: widget.textStyle ?? _defaultStyle(),
         decoration:
             widget.textDecoration ?? _defaultDecoration(state.widget.hint),
