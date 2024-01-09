@@ -13,7 +13,7 @@ dependencies:
   google_api_headers: ^1.3.0
   google_maps_webservice: ^0.0.20-nullsafety.5
   http: ^0.13.4
-  rxdart: ^0.27.5
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
