@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/src/flutter_google_places.dart';
-import 'package:google_maps_webservice_ex/places.dart';
+import 'package:google_maps_webservice/places.dart';
 
 /// A text field like widget to input places with autocomplete.
 ///
