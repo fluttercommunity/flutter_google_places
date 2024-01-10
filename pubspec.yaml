@@ -11,9 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
   google_api_headers: ^1.3.0
-  google_maps_webservice: ^0.0.20-nullsafety.5
-  http: ^0.13.4
-  rxdart: ^0.27.5
+  #google_maps_webservice_ex: ^0.0.1+2
+  http: ^1.0.0
+  rxdart: ^0.27.7
+  google_maps_webservice:
+    git:
+      url: https://github.com/arjun-c-369/google_maps_webservice.git
+      ref: cdf4dfb
 
 dev_dependencies:
   flutter_test:
