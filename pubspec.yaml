@@ -14,7 +14,7 @@ dependencies:
   #google_maps_webservice_ex: ^0.0.1+2
   http: ^1.0.0
   rxdart: ^0.27.7
-  google_maps_webservice_ex:
+  google_maps_webservice:
     git:
       url: https://github.com/arjun-c-369/google_maps_webservice.git
       ref: cdf4dfb
