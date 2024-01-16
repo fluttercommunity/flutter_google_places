@@ -29,6 +29,10 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final InputDecoration? decoration;
   final TextStyle? textStyle;
   final ThemeData? themeData;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -73,6 +77,10 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.textStyle,
     this.themeData,
     this.resultTextStyle,
+    this.height,
+    this.width,
+    this.margin = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -142,7 +150,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               ],
             ),
           ),
-          const Divider()
+          const Divider(),
         ],
       );
 
@@ -196,7 +204,10 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       }
 
       final container = Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+        width: widget.width,
+        height: widget.height,
+        padding: widget.padding,
+        margin: widget.margin,
         child: Stack(
           children: <Widget>[
             header,
@@ -375,7 +386,7 @@ class PoweredByGoogleImage extends StatelessWidget {
                 : _poweredByGoogleBlack,
             scale: 2.5,
           ),
-        )
+        ),
       ],
     );
   }
