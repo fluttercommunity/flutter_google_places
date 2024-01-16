@@ -582,6 +582,10 @@ class PlacesAutocomplete {
     TextStyle? textStyle,
     ThemeData? themeData,
     TextStyle? resultTextStyle,
+    double? width,
+    double? height,
+    EdgeInsetsGeometry? padding,
+    EdgeInsetsGeometry? margin,
   }) {
     final autoCompleteWidget = PlacesAutocompleteWidget(
       apiKey: apiKey,
@@ -606,6 +610,10 @@ class PlacesAutocomplete {
       textStyle: textStyle,
       themeData: themeData,
       resultTextStyle: resultTextStyle,
+      width: width,
+      height: height,
+      padding: padding,
+      margin: margin,
     );
 
     if (mode == Mode.overlay) {
