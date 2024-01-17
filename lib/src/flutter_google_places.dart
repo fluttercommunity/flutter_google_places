@@ -35,6 +35,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final bool showContainerBackground;
   final Color? backgroundColor;
+  final BorderRadius? borderRadius;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -85,6 +86,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.padding,
     this.showContainerBackground = false,
     this.backgroundColor,
+    this.borderRadius,
   }) : super(key: key);
 
   @override
@@ -215,7 +217,10 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           height: widget.height,
           padding: widget.padding,
           margin: widget.margin,
-          color: widget.showContainerBackground ? backgroundColor : null,
+          decoration: BoxDecoration(
+            color: widget.showContainerBackground ? backgroundColor : null,
+            borderRadius: widget.borderRadius,
+          ),
           child: Stack(
             children: <Widget>[
               header,
@@ -597,6 +602,7 @@ class PlacesAutocomplete {
     EdgeInsetsGeometry? margin,
     bool showContainerBackgrond = false,
     Color? backgroundColor,
+    BorderRadius? borderRadius,
   }) {
     final autoCompleteWidget = PlacesAutocompleteWidget(
       apiKey: apiKey,
@@ -627,6 +633,7 @@ class PlacesAutocomplete {
       margin: margin,
       showContainerBackground: showContainerBackgrond,
       backgroundColor: backgroundColor,
+      borderRadius: borderRadius,
     );
 
     if (mode == Mode.overlay) {
