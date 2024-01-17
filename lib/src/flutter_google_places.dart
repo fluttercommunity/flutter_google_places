@@ -34,6 +34,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final bool showContainerBackground;
+  final Color? backgroundColor;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -83,6 +84,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.margin = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
     this.padding,
     this.showContainerBackground = false,
+    this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -97,6 +99,8 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
   @override
   Widget build(BuildContext context) {
     final theme = widget.themeData ?? Theme.of(context);
+    final Color backgroundColor =
+        widget.backgroundColor ?? theme.dialogBackgroundColor;
     if (widget.mode == Mode.fullscreen) {
       return Theme(
         data: theme,
@@ -126,7 +130,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       final header = Column(
         children: <Widget>[
           Material(
-            color: theme.dialogBackgroundColor,
+            color: backgroundColor,
             borderRadius: BorderRadius.only(
               topLeft: headerTopLeftBorderRadius,
               topRight: headerTopRightBorderRadius,
@@ -175,7 +179,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           _response == null ||
           _response!.predictions.isEmpty) {
         body = Material(
-          color: theme.dialogBackgroundColor,
+          color: backgroundColor,
           borderRadius: BorderRadius.only(
             bottomLeft: bodyBottomLeftBorderRadius,
             bottomRight: bodyBottomRightBorderRadius,
@@ -189,7 +193,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               bottomLeft: bodyBottomLeftBorderRadius,
               bottomRight: bodyBottomRightBorderRadius,
             ),
-            color: theme.dialogBackgroundColor,
+            color: backgroundColor,
             child: ListBody(
               children: _response!.predictions
                   .map(
@@ -211,9 +215,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           height: widget.height,
           padding: widget.padding,
           margin: widget.margin,
-          color: widget.showContainerBackground
-              ? theme.dialogBackgroundColor
-              : null,
+          color: widget.showContainerBackground ? backgroundColor : null,
           child: Stack(
             children: <Widget>[
               header,
@@ -594,6 +596,7 @@ class PlacesAutocomplete {
     EdgeInsetsGeometry? padding,
     EdgeInsetsGeometry? margin,
     bool showContainerBackgrond = false,
+    Color? backgroundColor,
   }) {
     final autoCompleteWidget = PlacesAutocompleteWidget(
       apiKey: apiKey,
@@ -623,6 +626,7 @@ class PlacesAutocomplete {
       padding: padding,
       margin: margin,
       showContainerBackground: showContainerBackgrond,
+      backgroundColor: backgroundColor,
     );
 
     if (mode == Mode.overlay) {
