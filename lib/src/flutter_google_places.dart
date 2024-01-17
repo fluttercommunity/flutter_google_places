@@ -33,6 +33,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final double? height;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  final bool showContainerBackground;
 
   /// optional - sets 'proxy' value in google_maps_webservice
   ///
@@ -81,6 +82,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.width,
     this.margin = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
     this.padding,
+    this.showContainerBackground = false,
   }) : super(key: key);
 
   @override
@@ -203,16 +205,21 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
         );
       }
 
-      final container = Container(
-        width: widget.width,
-        height: widget.height,
-        padding: widget.padding,
-        margin: widget.margin,
-        child: Stack(
-          children: <Widget>[
-            header,
-            Padding(padding: const EdgeInsets.only(top: 48.0), child: body),
-          ],
+      final container = Center(
+        child: Container(
+          width: widget.width,
+          height: widget.height,
+          padding: widget.padding,
+          margin: widget.margin,
+          color: widget.showContainerBackground
+              ? theme.dialogBackgroundColor
+              : null,
+          child: Stack(
+            children: <Widget>[
+              header,
+              Padding(padding: const EdgeInsets.only(top: 48.0), child: body),
+            ],
+          ),
         ),
       );
 
@@ -586,6 +593,7 @@ class PlacesAutocomplete {
     double? height,
     EdgeInsetsGeometry? padding,
     EdgeInsetsGeometry? margin,
+    bool showContainerBackgrond = false,
   }) {
     final autoCompleteWidget = PlacesAutocompleteWidget(
       apiKey: apiKey,
@@ -614,6 +622,7 @@ class PlacesAutocomplete {
       height: height,
       padding: padding,
       margin: margin,
+      showContainerBackground: showContainerBackgrond,
     );
 
     if (mode == Mode.overlay) {
