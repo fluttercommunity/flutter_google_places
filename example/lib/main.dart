@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:google_api_headers/google_api_headers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart';
 
 const kGoogleApiKey = "API_KEY";
@@ -173,8 +173,8 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
       onTap: (p) {
         displayPrediction(p, context);
       },
-      logo: Row(
-        children: const [FlutterLogo()],
+      logo: const Row(
+        children: [FlutterLogo()],
         mainAxisAlignment: MainAxisAlignment.center,
       ),
     );

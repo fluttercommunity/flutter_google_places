@@ -40,9 +40,9 @@ class PlacesAutocompleteFormField extends FormField<String> {
   /// to [initalValue] or the empty string.
   ///
   /// For documentation about the various parameters, see the [PlacesAutocompleteField] class
-  /// and [new PlacesAutocompleteField], the constructor.
+  /// and [PlacesAutocompleteField.new], the constructor.
   PlacesAutocompleteFormField({
-    Key? key,
+    super.key,
     required String apiKey,
     this.controller,
     Icon? leading,
@@ -61,17 +61,13 @@ class PlacesAutocompleteFormField extends FormField<String> {
     bool? strictbounds,
     ValueChanged<PlacesAutocompleteResponse>? onError,
     InputDecoration inputDecoration = const InputDecoration(),
-    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
-    FormFieldSetter<String>? onSaved,
-    FormFieldValidator<String>? validator,
+    AutovalidateMode super.autovalidateMode = AutovalidateMode.disabled,
+    super.onSaved,
+    super.validator,
   })  : assert(initialValue == null || controller == null),
         super(
-          key: key,
           initialValue:
               controller != null ? controller.text : (initialValue ?? ''),
-          onSaved: onSaved,
-          validator: validator,
-          autovalidateMode: autovalidateMode,
           builder: (FormFieldState<String> field) {
             final TextFormFieldState state = field as TextFormFieldState;
             final InputDecoration effectiveDecoration = inputDecoration
