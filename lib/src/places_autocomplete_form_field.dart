@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:flutter_google_places/src/flutter_google_places.dart';
 import 'package:flutter_google_places/src/places_autocomplete_field.dart';
-import 'package:google_maps_webservice/places.dart';
 
 /// A [FormField] that contains a [PlacesAutocompleteField].
 ///
@@ -40,7 +40,7 @@ class PlacesAutocompleteFormField extends FormField<String> {
   /// to [initalValue] or the empty string.
   ///
   /// For documentation about the various parameters, see the [PlacesAutocompleteField] class
-  /// and [new PlacesAutocompleteField], the constructor.
+  /// and [PlacesAutocompleteField.new], the constructor.
   PlacesAutocompleteFormField({
     Key? key,
     required String apiKey,
