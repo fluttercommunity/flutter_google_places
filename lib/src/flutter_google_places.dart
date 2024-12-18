@@ -64,7 +64,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.region,
     this.logo,
     this.onError,
-    Key? key,
+    super.key,
     this.proxyBaseUrl,
     this.httpClient,
     this.startText,
@@ -73,7 +73,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.textStyle,
     this.themeData,
     this.resultTextStyle,
-  }) : super(key: key);
+  });
 
   @override
   State<PlacesAutocompleteWidget> createState() =>
@@ -142,7 +142,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               ],
             ),
           ),
-          const Divider()
+          const Divider(),
         ],
       );
 
@@ -259,11 +259,11 @@ class PlacesAutocompleteResult extends StatefulWidget {
   final TextStyle? resultTextStyle;
 
   const PlacesAutocompleteResult({
-    Key? key,
+    super.key,
     this.onTap,
     this.logo,
     this.resultTextStyle,
-  }) : super(key: key);
+  });
 
   @override
   PlacesAutocompleteResultState createState() =>
@@ -298,10 +298,10 @@ class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
   final TextStyle? textStyle;
 
   const AppBarPlacesAutoCompleteTextField({
-    Key? key,
+    super.key,
     this.textDecoration,
     this.textStyle,
-  }) : super(key: key);
+  });
 
   @override
   AppBarPlacesAutoCompleteTextFieldState createState() =>
@@ -347,8 +347,8 @@ class AppBarPlacesAutoCompleteTextFieldState
   TextStyle _defaultStyle() {
     return TextStyle(
       color: Theme.of(context).brightness == Brightness.light
-          ? Colors.black.withOpacity(0.9)
-          : Colors.white.withOpacity(0.9),
+          ? Colors.black.withValues(alpha:0.9)
+          : Colors.white.withValues(alpha:0.9),
       fontSize: 16.0,
     );
   }
@@ -360,7 +360,7 @@ class PoweredByGoogleImage extends StatelessWidget {
   static const _poweredByGoogleBlack =
       "packages/flutter_google_places/assets/google_black.png";
 
-  const PoweredByGoogleImage({Key? key}) : super(key: key);
+  const PoweredByGoogleImage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -375,7 +375,7 @@ class PoweredByGoogleImage extends StatelessWidget {
                 : _poweredByGoogleBlack,
             scale: 2.5,
           ),
-        )
+        ),
       ],
     );
   }
@@ -387,11 +387,11 @@ class PredictionsListView extends StatelessWidget {
   final TextStyle? resultTextStyle;
 
   const PredictionsListView({
-    Key? key,
+    super.key,
     required this.predictions,
     this.onTap,
     this.resultTextStyle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -415,11 +415,11 @@ class PredictionTile extends StatelessWidget {
   final TextStyle? resultTextStyle;
 
   const PredictionTile({
-    Key? key,
+    super.key,
     required this.prediction,
     this.onTap,
     this.resultTextStyle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

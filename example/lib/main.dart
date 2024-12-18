@@ -173,8 +173,8 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
       onTap: (p) {
         displayPrediction(p, context);
       },
-      logo: Row(
-        children: const [FlutterLogo()],
+      logo: const Row(
+        children: [FlutterLogo()],
         mainAxisAlignment: MainAxisAlignment.center,
       ),
     );
